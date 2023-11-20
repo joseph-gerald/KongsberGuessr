@@ -1,3 +1,35 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Clash Display:wght@400;500;600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600&display=swap");
+
+:root {
+    --colour-primary: #34C1C5;
+    --colour-secondary: #C3D7EF;
+    --colour-accent: #306EB5;
+}
+
+body {
+    font-family: "Poppins", sans-serif;
+    color: rgb();
+    background: #2D2D2D;
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+}
+
+.accent-to-primary-text {
+    background: -webkit-linear-gradient(180deg, var(--colour-primary), var(--colour-accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    line-height: 1.3;
+}
+
+.clash-display {
+    font-family: "Clash Display", sans-serif;
+}
+
+.outfit {
+    font-family: "Outfit", sans-serif;
+}
