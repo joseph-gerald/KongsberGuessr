@@ -1,44 +1,70 @@
 import Home from "./sections/home";
+import SignIn from "./sections/sign_in";
 import Features from "./sections/features";
-import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 export default function Index() {
-    const router = useRouter();
-    let query = router.query
-    const [curSection, setSection] = useState(query.section);
 
-    const syncScroll = (section: any) => {
-        const home = document.getElementById("home");
-        const faq = document.getElementById("faqs");
-        const features = document.getElementById("features");
-        if (!home || !faq || !features) return;
-        if (section === "home") {
-            home.scrollIntoView({ behavior: "smooth" });
+    const syncScroll = () => {
+        const sections = document.querySelectorAll('.section');
+        const dots = document.querySelectorAll('.pagination-dot');
+        let canScroll = true;
+        let sectionIndex = 0;
+
+        function doScroll() {
+            if(screen.width < 1024) return;
+            sectionIndex = Math.min(Math.max(sectionIndex, 0), sections.length - 1);
+            sections[sectionIndex].scrollIntoView({ behavior: 'smooth' });
+
+            dots.forEach((dot, index) => {
+                if (index !== sectionIndex) dot.classList.remove('active');
+            });
+
+            dots[sectionIndex].classList.add('active');
+        }   
+
+        function scrollToNextSection(down: boolean) {
+            if (canScroll) {
+                sectionIndex += down ? 1 : -1;
+                canScroll = false;
+
+                setTimeout(() => canScroll = true, 750);
+            }
+
+            doScroll();
         }
-        if (section === "faq") {
-            faq.scrollIntoView({ behavior: "smooth" });
-        }
-        if (section === "features") {
-            features.scrollIntoView({ behavior: "smooth" });
-        }
-        // setSection(section);
-    };
+
+        setInterval(() => doScroll(), 50);
+
+        sections.forEach((region) => {
+            region.addEventListener('wheel', (event: any) => {
+                if (!canScroll) return;
+                scrollToNextSection(event.wheelDeltaY < 0);
+            });
+        });
+    }
 
     useEffect(() => {
-        syncScroll(curSection);
-    }, [curSection]);
-
+        syncScroll();
+    });
 
     return (
         <>
             <div className="snap-y snap-proximity">
-                <div className="snap-start">
+                <div className="section">
                     <Home />
                 </div>
-                <div className="snap-start">
+                <div className="section">
                     <Features />
                 </div>
+                <div className="section">
+                    <SignIn />
+                </div>
+            </div>
+            <div className="pagination">
+                {[0, 1, 2].map((i) => (
+                    <div key={i} className={"pagination-dot"}></div>
+                ))}
             </div>
         </>
     );
