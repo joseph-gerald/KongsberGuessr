@@ -61,7 +61,7 @@ export default function Index() {
                     <SignIn />
                 </div>
             </div>
-            <div className="pagination">
+            <div className="pagination hidden lg:flex">
                 {[0, 1, 2].map((i) => (
                     <div key={i} className={"pagination-dot"}></div>
                 ))}

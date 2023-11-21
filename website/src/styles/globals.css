@@ -98,7 +98,6 @@ body {
     transform: translateY(50%);
     right: 10px;
     gap: 8px;
-    display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
