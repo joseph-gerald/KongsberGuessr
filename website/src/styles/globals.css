@@ -97,7 +97,7 @@ body {
     bottom: 50%;
     transform: translateY(50%);
     right: 10px;
-    gap: 8px;
+    gap: 10px;
     justify-content: center;
     align-items: center;
     flex-direction: column;
