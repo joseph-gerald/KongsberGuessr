@@ -1,5 +1,7 @@
 import "../styles/globals.css";
 import type { AppProps } from "next/app";
+import client from './api/_db';
+
 
 export const metadata = {
   title: "KongsberGuessr - Kongsbergian Geograpahy Game",
