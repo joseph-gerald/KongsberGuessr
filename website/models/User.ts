@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-const userSchema = mongoose.Schema({
+const scheme = mongoose.Schema({
     username: {
         type: String,
         required: [true, 'Username is required']
@@ -24,7 +24,7 @@ let User;
 try {
     User = mongoose.model('User');
 } catch (error) {
-    User = mongoose.model('User', userSchema);
+    User = mongoose.model('User', scheme);
 }
 
 export default User as any;

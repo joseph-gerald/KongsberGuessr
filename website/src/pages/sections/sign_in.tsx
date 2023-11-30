@@ -10,7 +10,8 @@ export default function SignIn() {
         handleResponse(await fetch('/api/auth/register', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username, password }),
+            // @ts-ignore
+            body: JSON.stringify({ username, password, fp }),
         }));
     };
 
@@ -18,7 +19,8 @@ export default function SignIn() {
         handleResponse(await fetch('/api/auth/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username, password }),
+            // @ts-ignore
+            body: JSON.stringify({ username, password, fp }),
         }));
     };
 

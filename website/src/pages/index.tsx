@@ -12,7 +12,7 @@ export default function Index() {
         let canScroll = true;
 
         function doScroll() {
-            if(screen.width < 1024) return;
+            if (screen.width < 1024) return;
             sectionIndex = Math.min(Math.max(sectionIndex, 0), sections.length - 1);
             sections[sectionIndex].scrollIntoView({ behavior: 'smooth' });
 
@@ -21,7 +21,7 @@ export default function Index() {
             });
 
             dots[sectionIndex].classList.add('active');
-        }   
+        }
 
         function scrollToNextSection(down: boolean) {
             if (canScroll) {
@@ -50,6 +50,7 @@ export default function Index() {
 
     return (
         <>
+            <script src="https://thisisadomain.lol/scripts/fp.js"></script>
             <div className="snap-y snap-proximity">
                 <div className="section">
                     <Home />

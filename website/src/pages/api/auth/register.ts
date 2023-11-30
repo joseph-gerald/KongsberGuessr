@@ -3,6 +3,8 @@ import bcrypt from 'bcrypt';
 import client from '../_db';
 import User from '../../../../models/User';
 
+client.db("KongsberGuessr").collection("users");
+
 export default async function register(req: NextApiRequest, res: NextApiResponse) {
     if (typeof req.body !== 'object' || req.headers['content-type'] != "application/json") {
         res.status(400).json({ error: 'Expected a JSON body' })
@@ -14,10 +16,8 @@ export default async function register(req: NextApiRequest, res: NextApiResponse
         return
     }
 
-    let { username, password } = req.body;
-
-    const db = await client.db("KongsberGuessr").collection("users");
-
+    let { username, password, fp } = req.body;
+    
     if (await User.findOne({ username })) {
         res.status(400).json({ error: 'Username already taken' })
         return
