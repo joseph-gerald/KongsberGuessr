@@ -21,7 +21,7 @@ export default function Features() {
                     ></Feature>
                     <Feature
                         title="Fun"
-                        desc="KongsberGuessr is most probably the funnest geography game when it comes to Kongsberg. We not only aim to be a platform to have fun but also to learn as we have educational features to aid in your learning adventure!"
+                        desc="KongsberGuessr is most probably the funnest geography game when it comes to Kongsberg. We not only aim to be a fun platform but also to learn as we have educational features aid your learning adventure!"
                         img="/imgs/game.png"
                     ></Feature>
                 </div>

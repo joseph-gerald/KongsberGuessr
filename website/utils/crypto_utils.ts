@@ -6,4 +6,8 @@ const sha1 = (data: string): string => {
     return hash.digest('hex');
 }
 
-export default { sha1 };
+const generateToken = (): string => {
+    return crypto.randomUUID();
+}
+
+export default { sha1, generateToken };

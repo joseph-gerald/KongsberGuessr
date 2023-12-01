@@ -30,6 +30,7 @@ export default function SignIn() {
             case 200:
                 setMessage('Logging you in...');
                 setMessageColor('text-green-600');
+                window.location.href = '/home';
                 break;
             case 401:
                 setMessage('Wrong password');

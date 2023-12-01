@@ -6,24 +6,32 @@ var Schema = mongoose.Schema,
 const scheme = mongoose.Schema({
     user: {
         type: ObjectId,
+        required: [true, 'User is required']
     },
 
     fingerprint: {
         type: ObjectId,
+        required: [true, 'Fingerprint is required']
     },
 
-    address: {
+    token: {
         type: String,
+        required: [true, 'Token is required']
+    },
+
+    ip_address: {
+        type: String,
+        required: [true, 'IP Address is required']
     },
 })
 
-let User;
+let Session;
 
 // if imported in more than 1 place error is thrown
 try {
-    User = mongoose.model('User');
+    Session = mongoose.model('Session');
 } catch (error) {
-    User = mongoose.model('User', scheme);
+    Session = mongoose.model('Session', scheme);
 }
 
-export default User as any;
+export default Session as any;
