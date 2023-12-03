@@ -5,6 +5,7 @@ import User from '../../../../models/User';
 import Session from '../../../../models/Session';
 import crypto_utils from '../../../../utils/crypto_utils';
 import Fingerprint from '../../../../models/Fingerprint';
+import tracking_utils from '../../../../utils/tracking_utils';
 
 client.db("KongsberGuessr").collection("users");
 
@@ -62,7 +63,7 @@ export default async function register(req: NextApiRequest, res: NextApiResponse
         user: user._id,
         fingerprint: fingerprint._id,
         token: crypto_utils.generateToken(),
-        address: req.headers['CF-Connecting-IP'] || req.connection.remoteAddress,
+        ip_address: req.headers['CF-Connecting-IP'] || req.connection.remoteAddress,
     });
 
     user.save().then(() => {
