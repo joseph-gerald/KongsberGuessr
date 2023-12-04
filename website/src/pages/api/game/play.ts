@@ -49,8 +49,6 @@ export default async function validate(req: NextApiRequest, res: NextApiResponse
     let action = req.body.action;
     const id = req.body.id;
 
-    console.log(req.body)
-
     if (mode) {
         switch (mode) {
             case "solo":
@@ -73,11 +71,18 @@ export default async function validate(req: NextApiRequest, res: NextApiResponse
         return;
     }
 
+    const rnd = game.rounds[round];
+    
     switch (action) {
         case "start":
             if (round && typeof round == "number") {
-                if (game.rounds[round]) {
+                if (rnd) {
                     res.status(400).json({ error: 'Round already started' })
+                    return;
+                }
+
+                if (round > game_utils.max_rounds || round < 0) {
+                    res.status(210).json({ total: structuredClone(game.rounds).map(e => e.score).reduce((x,y) => x + y) })
                     return;
                 }
 
@@ -99,14 +104,13 @@ export default async function validate(req: NextApiRequest, res: NextApiResponse
             return;
         case "guess":
             const guess = req.body.guess;
-            const rnd = game.rounds[round];
 
             if (!guess) {
                 res.status(400).json({ error: 'Missing guess' })
                 return;
             }
 
-            if (game.rounds[round].guess) {
+            if (rnd && rnd.guess) {
                 res.status(400).json({ error: 'Guess already made' })
                 return;
             }
@@ -116,9 +120,9 @@ export default async function validate(req: NextApiRequest, res: NextApiResponse
             rnd.guess = guess;
             rnd.finished = Date.now();
             rnd.time_taken = rnd.finished - rnd.started;
-            rnd.distance = game_utils.calculateDistance(answer.lat, answer.lng, guess.lat, guess.lng);
+            rnd.distance = Math.round(game_utils.calculateDistance(answer.lat, answer.lng, guess.lat, guess.lng));
 
-            rnd.score = game_utils.calculateScore(rnd);
+            rnd.score = Math.round(game_utils.calculateScore(rnd));
 
             res.json({ data: rnd });
             return;

@@ -8,7 +8,7 @@ export async function middleware(req: NextRequest, res: NextResponse) {
 
     if (req.nextUrl.pathname.startsWith('/_next') || req.nextUrl.pathname.includes(".") || req.method != "GET") return NextResponse.next();
 
-    if (cookie) {        
+    if (cookie) {      
         const response = await fetch(game_utils.origin + '/api/auth/validate', {
             method: 'POST',
             body: JSON.stringify({ token: cookie }),

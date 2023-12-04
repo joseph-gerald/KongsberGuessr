@@ -1,6 +1,8 @@
 const origin = "https://dev.jooo.tech"; // idk where else to put ok?
 const apiKey = "AIzaSyDPd41N40KlY6TvlPUVeA0MYIB6jmYIY64";
 
+const max_rounds = 5;
+
 const boundings = {
     latMin: 59.6295025,
     latMax: 59.7095025,
@@ -54,7 +56,7 @@ async function getRandomPlace(): Promise<{ lat: number, lng: number }> {
     const area = calculateArea(latMin, latMax, lonMin, lonMax);
 
     if (area > 1E-7) {
-        console.log("area too big, retrying");
+        console.log("area too big, retrying", area);
         return await getRandomPlace();
     }
 
@@ -69,4 +71,4 @@ async function getRandomPlace(): Promise<{ lat: number, lng: number }> {
     }
 }
 
-export default { getRandomPlace, calculateDistance, calculateScore, origin, apiKey };
+export default { getRandomPlace, calculateDistance, calculateScore, origin, apiKey, max_rounds };

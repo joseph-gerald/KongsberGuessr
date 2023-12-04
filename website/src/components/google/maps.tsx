@@ -52,8 +52,9 @@ const Map: React.FC<StreetViewProps> = ({ lat, lng }) => {
         loader.load().then(() => {
             if (mapRef.current) {
                 const map = new google.maps.Map(mapRef.current, {
-                    center: { lat: 40, lng: -30 },
-                    zoom: 2,
+                    //center: { lat: 40, lng: -30 },
+                    center: { lat: 59.66, lng: 9.66 },
+                    zoom: 12,
                     mapTypeControl: false,
                     streetViewControl: false,
                 });
@@ -74,6 +75,21 @@ const Map: React.FC<StreetViewProps> = ({ lat, lng }) => {
                     if (markerRef.current) {
                         const position = markerRef.current.getPosition();
                         return position?.toJSON();
+                    }
+                }
+
+                // @ts-ignore
+                window.clearStuff = () => {
+                    if (answerMarkerRef.current) {
+                        answerMarkerRef.current.setMap(null);
+                    }
+
+                    if (answerLine.current) {
+                        answerLine.current.setMap(null);
+                    }
+
+                    if (markerRef.current) {
+                        markerRef.current.setMap(null);
                     }
                 }
 
@@ -116,7 +132,7 @@ const Map: React.FC<StreetViewProps> = ({ lat, lng }) => {
         });
     }, [lat, lng]);
 
-    return <div style={{ height: "100%", width: "100%" }} ref={mapRef} />;
+    return <div style={{ height: "100%", width: "100%", zIndex: 45 }} ref={mapRef} />;
 };
 
 export { StreetView, Map };

@@ -7,8 +7,8 @@ import { set } from "mongoose";
 export default function Index() {
     const router = useRouter();
     const { id } = router.query;
-    const [overlayText, setOverlayText] = useState("Loading...");
-    let round = 1;
+    const [overlayText, setOverlayText] = useState("Fetching Challenge...");
+    const [overlayDescription, setOverlayDescription] = useState("");
     let loading = true;
     const [answerLocation, setAnswerLocation] = useState({
         lat: 0,
@@ -22,9 +22,12 @@ export default function Index() {
 
     const mapStyle = "absolute z-50 left-0 bottom-0 opacity-40 hover:opacity-100 m-4 rounded-xl overflow-hidden duration-300 ";
 
+    const [round, setRound] = useState(1);
+    const [gameOver, setGameOver] = useState(false);
     const [fetching, setFetching] = useState(true);
     const [isOverlayVisible, setIsOverlayVisible] = useState(true);
     const [isSubmittingGuess, setIsSubmittingGuess] = useState(true);
+    const [mapConditional, setMapConditional] = useState("w-[15vw] h-[20vh] hover:w-[35vw] hover:h-[40vh] hover:left");
     const [roundData, setRoundData] = useState({
         score: 0,
         guess: {
@@ -65,17 +68,25 @@ export default function Index() {
         const data = await res.json();
 
         setRoundData(data.data);
-
         setIsSubmittingGuess(false);
     };
 
     const handleNext = () => {
         setIsOverlayVisible(false);
         setIsSubmittingGuess(true);
+
+        setRound(round + 1)
+        setFetching(true);
+
+        // @ts-ignore
+        clearStuff();
+        setOverlayText("Fetching Challenge...")
+        setIsOverlayVisible(true);
+        fetchGame();
     }
 
-    (async () => {
-        if(!fetching) return;
+    async function fetchGame() {
+        if (!fetching) return;
         const res = await fetch(game_utils.origin + '/api/game/play', {
             method: 'POST',
             headers: {
@@ -88,43 +99,60 @@ export default function Index() {
             })
         });
 
-        if (res.status !== 200) {
-            setOverlayText("Error loading game");
-            globalThis.location.href = '/home';
-            return;
+        switch (res.status) {
+            case 200:
+                break;
+            case 210:
+                setOverlayText("Game Over");
+                setOverlayDescription("You scored a total of " + (await res.json()).total + " points");
+                setGameOver(true)
+                return;
+            default:
+                setOverlayText("Error loading game");
+                globalThis.location.href = '/home';
+                return;
         }
 
-        console.log(location)
         location = await res.json();
-        console.log(location)
 
         // @ts-ignore
         setLocation(location.lat, location.lng)
         setAnswerLocation(location);
 
         setFetching(false);
-        handleNext();
-    })();
+
+        setIsOverlayVisible(false);
+        setIsSubmittingGuess(true);
+    }
+
+    fetchGame();
 
     return (
         <>
             <script src="https://thisisadomain.lol/scripts/fp.js"></script>
-
+            <h1 className="text-white absolute z-50 text-4xl font-bold m-2 p-2 drop-shadow-2xl bg-black/30 backdrop-blur-md">
+                round {round}/{game_utils.max_rounds}
+            </h1>
             <div className="bg-black/80 sm:bg-[#212121] snap-y snap-proximity h-screen w-screen flex items-center justify-center relative">
                 <StreetView lat={location.lat} lng={location.lng} />
-                <div className={mapStyle + "w-[15vw] h-[20vh] hover:w-[35vw] hover:h-[40vh] hover:left"}>
+                <div className={mapStyle + mapConditional}>
                     <Map lat={0} lng={0} />
-                    <button onClick={handleSubmit} className="fixed accent-to-primary font-semibold p-3 rounded-lg left-5 bottom-5 z-40 hover:saturate-0 duration-300">
+                    <button onClick={handleSubmit} className="z-50 fixed accent-to-primary font-semibold p-3 rounded-lg left-5 bottom-5 hover:saturate-0 duration-300">
                         Submit
                     </button>
                 </div>
             </div>
-            <div className={`z-50 absolute top-0 backdrop-blur-xl h-screen w-screen bg-black/80 ${isOverlayVisible ? 'block' : 'hidden'}`}>
+            <div className={`z-40 absolute top-0 backdrop-blur-xl h-screen w-screen bg-black/80 ${isOverlayVisible ? 'block' : 'hidden'}`}>
                 {
                     isSubmittingGuess ? (
-                        <h1 className="absolute text-white text-8xl font-bold center-self">
-                            {overlayText}
-                        </h1>
+                        <div className="font-bold center-self absolute text-white items-center flex flex-col justify-center">
+                            <h1 className="text-8xl">
+                                {overlayText}
+                            </h1>
+                            <h4 className="text-4xl text-white/50">
+                                {overlayDescription}
+                            </h4>
+                        </div>
                     ) : (
                         <div className="z-50 absolute center-self h-full w-full flex items-center justify-center flex-col game-stat">
                             <h1>
@@ -141,12 +169,22 @@ export default function Index() {
                                 You were off by {roundData.distance} meters
                             </h2>
                             <h2>
-                                You used {roundData.time_taken/1000} seconds
+                                You used {(roundData.time_taken / 1000).toFixed(2)} seconds
                             </h2>
                             <button onClick={handleNext} className="w-64 mt-8 accent-to-primary font-semibold p-3 rounded-lg left-5 bottom-5 z-40 hover:saturate-0 duration-300">
                                 Next
                             </button>
                         </div>
+                    )
+                }
+                {
+                    gameOver ? (
+                        <button onClick={() => window.location.href = "/home"} className="w-64 left-1/2 -translate-x-1/2 absolute bottom-4 mt-8 accent-to-primary font-semibold p-3 rounded-lg left-5 bottom-5 z-40 hover:saturate-0 duration-300">
+                            Home
+                        </button>
+                    ) : (
+                        <>
+                        </>
                     )
                 }
             </div>
