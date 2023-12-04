@@ -2,12 +2,14 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import crypto_utils from '../../../../utils/crypto_utils';
 import Session from '../../../../models/Session';
 import client from '../_db';
+import game_utils from '../../../../utils/game_utils';
 
 client.db("KongsberGuessr").collection("users");
 
 class Game {
     token: string;
-
+    rounds: any[] = [];
+    id: string = crypto_utils.sha1(crypto_utils.generateToken()).slice(0, 8);
     constructor(token: string) {
         this.token = token;
     }
@@ -43,12 +45,17 @@ export default async function validate(req: NextApiRequest, res: NextApiResponse
 
     let game = games[token];
     let mode = req.body.mode;
+    let round = req.body.round;
+    let action = req.body.action;
+    const id = req.body.id;
+
+    console.log(req.body)
 
     if (mode) {
         switch (mode) {
             case "solo":
                 game = games[token] = new Game(token);
-                res.send({ id: crypto_utils.sha1(crypto_utils.generateToken()).slice(0, 8) });
+                res.send({ id: game.id });
                 return;
             default:
                 res.status(400).json({ error: 'Invalid mode' })
@@ -57,8 +64,66 @@ export default async function validate(req: NextApiRequest, res: NextApiResponse
     }
 
     if (!game) {
-        res.status(404).json({ error: 'Not Found' })
+        res.status(400).json({ error: 'Invalid game' })
         return;
     }
 
+    if (id != game.id) { // token logged by lebell
+        res.status(400).json({ error: 'Another Game Started' })
+        return;
+    }
+
+    switch (action) {
+        case "start":
+            if (round && typeof round == "number") {
+                if (game.rounds[round]) {
+                    res.status(400).json({ error: 'Round already started' })
+                    return;
+                }
+
+                const currentRound = {
+                    round_id: round,
+                    started: Date.now(),
+                    finished: null,
+                    score: 0,
+                    location: await game_utils.getRandomPlace(),
+                    distance: null,
+                    guess: null,
+                    time_taken: null,
+                };
+
+                game.rounds[round] = currentRound;
+
+                res.json(currentRound.location);
+            }
+            return;
+        case "guess":
+            const guess = req.body.guess;
+            const rnd = game.rounds[round];
+
+            if (!guess) {
+                res.status(400).json({ error: 'Missing guess' })
+                return;
+            }
+
+            if (game.rounds[round].guess) {
+                res.status(400).json({ error: 'Guess already made' })
+                return;
+            }
+
+            const answer = rnd.location;
+
+            rnd.guess = guess;
+            rnd.finished = Date.now();
+            rnd.time_taken = rnd.finished - rnd.started;
+            rnd.distance = game_utils.calculateDistance(answer.lat, answer.lng, guess.lat, guess.lng);
+
+            rnd.score = game_utils.calculateScore(rnd);
+
+            res.json({ data: rnd });
+            return;
+        default:
+            res.status(400).json({ error: 'Invalid' })
+            return;
+    }
 }

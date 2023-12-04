@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { StreetView, Map } from "../../../components/google/maps";
+import io from 'socket.io-client';
 
 export default function Index() {
     const location = {
