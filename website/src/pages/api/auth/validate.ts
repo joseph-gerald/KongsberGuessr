@@ -28,5 +28,12 @@ export default async function validate(req: NextApiRequest, res: NextApiResponse
         return;
     }
 
+    const user = await User.findOne({ _id: session.user })
+
+    if (!user) {
+        res.status(400).json({ error: 'Invalid token' })
+        return;
+    }
+
     res.json({ success: true });
 }

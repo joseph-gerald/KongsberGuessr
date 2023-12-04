@@ -15,7 +15,12 @@ const scheme = mongoose.Schema({
             },
             message: () => 'Password must be at least 8 characters long'
         }
-    }
+    },
+
+    xp: {
+        type: Number,
+        default: 0,
+    },
 })
 
 let User;

@@ -7,12 +7,12 @@ const boundings = {
     latMin: 59.6295025,
     latMax: 59.7095025,
 
-    lonMin: 9.6108472,
-    lonMax: 9.6908472
+    lngMin: 9.6108472,
+    lngMax: 9.6908472
 }
 
-function calculateArea(latMin: number, latMax: number, lonMin: number, lonMax: number) {
-    return (latMax - latMin) * (lonMax - lonMin);
+function calculateArea(latMin: number, latMax: number, lngMin: number, lngMax: number) {
+    return (latMax - latMin) * (lngMax - lngMin);
 }
 
 function isValidStreetView(lat: number, lng: number) {
@@ -22,12 +22,12 @@ function isValidStreetView(lat: number, lng: number) {
 }
 
 // in stackoverflow we trust
-function calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number) {
+function calculateDistance(lat1: number, lng1: number, lat2: number, lng2: number) {
     const R = 6371e3; // metres
     const φ1 = lat1 * Math.PI / 180; // φ, λ in radians
     const φ2 = lat2 * Math.PI / 180;
     const Δφ = (lat2 - lat1) * Math.PI / 180;
-    const Δλ = (lon2 - lon1) * Math.PI / 180;
+    const Δλ = (lng2 - lng1) * Math.PI / 180;
 
     const a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
         Math.cos(φ1) * Math.cos(φ2) *
@@ -46,29 +46,33 @@ function calculateScore(round: any) {
     return Math.max(0, 1000 - distance);
 }
 
-async function getRandomPlace(): Promise<{ lat: number, lng: number }> {
+async function getGeoData(lat: number, lng: number) {
+    return await (await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`)).json()
+}
+
+async function getRandomPlace(): Promise<{ lat: number, lng: number, address: string }> {
     let lat = Math.random() * (boundings.latMax - boundings.latMin) + boundings.latMin;
-    let lon = Math.random() * (boundings.lonMax - boundings.lonMin) + boundings.lonMin;
+    let lng = Math.random() * (boundings.lngMax - boundings.lngMin) + boundings.lngMin;
+    
+    let data = await getGeoData(lat, lng);
+    const [latMin, latMax, lngMin, lngMax] = data.boundingbox.map(Number);
+    const area = calculateArea(latMin, latMax, lngMin, lngMax);
 
-    let response = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`);
-    let data = await response.json();
-    const [latMin, latMax, lonMin, lonMax] = data.boundingbox.map(Number);
-    const area = calculateArea(latMin, latMax, lonMin, lonMax);
-
-    if (area > 1E-7) {
+    if (area > 1E-5) {
         console.log("area too big, retrying", area);
         return await getRandomPlace();
     }
 
-    if (!await isValidStreetView(lat, lon)) {
+    if (!await isValidStreetView(lat, lng)) {
         console.log("not a valid street view, retrying");
         return await getRandomPlace();
     }
 
     return {
         lat: lat,
-        lng: lon,
+        lng: lng,
+        address: data.display_name
     }
 }
 
-export default { getRandomPlace, calculateDistance, calculateScore, origin, apiKey, max_rounds };
+export default { getRandomPlace, calculateDistance, getGeoData, calculateScore, origin, apiKey, max_rounds };

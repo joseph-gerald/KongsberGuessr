@@ -33,10 +33,12 @@ export default function Index() {
         guess: {
             lat: 0,
             lng: 0,
+            address: "",
         },
         location: {
             lat: 0,
             lng: 0,
+            address: "",
         },
         distance: 0,
         time_taken: 0,
@@ -109,7 +111,9 @@ export default function Index() {
                 return;
             default:
                 setOverlayText("Error loading game");
-                globalThis.location.href = '/home';
+                if (globalThis.location) {
+                    globalThis.location.href = '/home';
+                }
                 return;
         }
 
@@ -160,10 +164,10 @@ export default function Index() {
                             </h1>
                             <hr className="border w-96 m-2 mb-6" />
                             <h2>
-                                You guessed {roundData.guess.lat}, {roundData.guess.lng}
+                                You guessed {roundData.guess.address}
                             </h2>
                             <h2>
-                                It was actually {roundData.location.lat}, {roundData.location.lng}
+                                It was actually {roundData.location.address}
                             </h2>
                             <h2>
                                 You were off by {roundData.distance} meters
@@ -171,7 +175,7 @@ export default function Index() {
                             <h2>
                                 You used {(roundData.time_taken / 1000).toFixed(2)} seconds
                             </h2>
-                            <button onClick={handleNext} className="w-64 mt-8 accent-to-primary font-semibold p-3 rounded-lg left-5 bottom-5 z-40 hover:saturate-0 duration-300">
+                            <button onClick={handleNext} className="absolute w-64 mt-8 accent-to-primary font-semibold p-3 rounded-lg left-1/2 -translate-x-1/2 bottom-5 z-40 hover:saturate-0 duration-300">
                                 Next
                             </button>
                         </div>
@@ -179,7 +183,7 @@ export default function Index() {
                 }
                 {
                     gameOver ? (
-                        <button onClick={() => window.location.href = "/home"} className="w-64 left-1/2 -translate-x-1/2 absolute bottom-4 mt-8 accent-to-primary font-semibold p-3 rounded-lg left-5 bottom-5 z-40 hover:saturate-0 duration-300">
+                        <button onClick={() => window.location.href = "/home"} className="absolute w-64 left-1/2 -translate-x-1/2 absolute bottom-4 mt-8 accent-to-primary font-semibold p-3 rounded-lg left-1/2 -translate-x-1/2 bottom-5 z-40 hover:saturate-0 duration-300">
                             Home
                         </button>
                     ) : (
