@@ -117,3 +117,23 @@ body {
 .pagination-dot.active {
     background: rgba(255, 255, 255, 0.8);
 }
+
+.center-self {
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.game-stat h1 {
+    font-size: 2rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    color: white;
+}
+
+.game-stat > h2 {
+    font-size: 1.25rem;
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+    color: rgba(255,255,255,0.8);
+}
