@@ -90,11 +90,11 @@ export default function Index() {
 
     const updateDistance = () => {
         // @ts-ignore
-        const guess = getPlayerLocation(location.lat + location.lng);
-        
+        const guess = getPlayerLocation(answerLocation.lat + answerLocation.lng);
+        console.log(guess)
         if(!guess || guess == "error") return;
         
-        const distance = Math.round(game_utils.calculateDistance(guess.lat, guess.lng, location.lat, location.lng));
+        const distance = Math.round(game_utils.calculateDistance(guess.lat, guess.lng, answerLocation.lat, answerLocation.lng));
         setDistance(distance);
     }
 
