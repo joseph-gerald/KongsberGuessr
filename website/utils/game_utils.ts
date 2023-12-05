@@ -1,4 +1,4 @@
-const origin = "https://dev.jooo.tech"; // idk where else to put ok?
+const origin = "https://kbg.jooo.tech"; // idk where else to put ok?
 const apiKey = "AIzaSyDPd41N40KlY6TvlPUVeA0MYIB6jmYIY64";
 
 const max_rounds = 5;

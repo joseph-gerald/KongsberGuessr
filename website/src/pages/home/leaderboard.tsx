@@ -39,6 +39,7 @@ export default function Leaderboard({onClick}: {onClick: any}) {
                                         username={user.username}
                                         xp={user.xp}
                                         rank={index}
+                                        key={index}
                                     />
                                 ))}
                             </div>
