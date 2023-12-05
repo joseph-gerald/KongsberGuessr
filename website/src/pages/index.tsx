@@ -34,8 +34,6 @@ export default function Index() {
             doScroll();
         }
 
-        setInterval(() => doScroll(), 50);
-
         sections.forEach((region) => {
             region.addEventListener('wheel', (event: any) => {
                 if (!canScroll) return;

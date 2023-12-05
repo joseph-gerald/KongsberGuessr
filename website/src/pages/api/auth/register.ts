@@ -63,7 +63,7 @@ export default async function register(req: NextApiRequest, res: NextApiResponse
         user: user._id,
         fingerprint: fingerprint._id,
         token: crypto_utils.generateToken(),
-        ip_address: req.headers['CF-Connecting-IP'] || req.connection.remoteAddress,
+        ip_address: req.headers['cf-connecting-ip'] || req.connection.remoteAddress,
     });
 
     user.save().then(() => {

@@ -3,13 +3,24 @@ const apiKey = "AIzaSyDPd41N40KlY6TvlPUVeA0MYIB6jmYIY64";
 
 const max_rounds = 5;
 
-const boundings = {
-    latMin: 59.6295025,
-    latMax: 59.7095025,
+const places = {
+    Kongsberg: {
+        latMin: 59.6295025,
+        latMax: 59.7095025,
 
-    lngMin: 9.6108472,
-    lngMax: 9.6908472
+        lngMin: 9.6108472,
+        lngMax: 9.6908472
+    },
+    Drammen: {
+        latMin: 59.530,
+        latMax: 59.862,
+
+        lngMin: 9.94,
+        lngMax: 10.42
+    }
 }
+
+const boundings = places.Kongsberg;
 
 function calculateArea(latMin: number, latMax: number, lngMin: number, lngMax: number) {
     return (latMax - latMin) * (lngMax - lngMin);
@@ -53,7 +64,7 @@ async function getGeoData(lat: number, lng: number) {
 async function getRandomPlace(): Promise<{ lat: number, lng: number, address: string }> {
     let lat = Math.random() * (boundings.latMax - boundings.latMin) + boundings.latMin;
     let lng = Math.random() * (boundings.lngMax - boundings.lngMin) + boundings.lngMin;
-    
+
     let data = await getGeoData(lat, lng);
     const [latMin, latMax, lngMin, lngMax] = data.boundingbox.map(Number);
     const area = calculateArea(latMin, latMax, lngMin, lngMax);
@@ -75,4 +86,4 @@ async function getRandomPlace(): Promise<{ lat: number, lng: number, address: st
     }
 }
 
-export default { getRandomPlace, calculateDistance, getGeoData, calculateScore, origin, apiKey, max_rounds };
+export default { getRandomPlace, calculateDistance, getGeoData, calculateScore, origin, apiKey, max_rounds, boundings };

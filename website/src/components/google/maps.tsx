@@ -2,6 +2,9 @@ import { useEffect, useRef } from "react";
 import { Loader } from "@googlemaps/js-api-loader";
 import game_utils from "../../../utils/game_utils";
 
+const startLatmap = (game_utils.boundings.latMax + game_utils.boundings.latMin) / 2;
+const startLngmap = (game_utils.boundings.lngMax + game_utils.boundings.lngMin) / 2;
+
 interface StreetViewProps {
     lat: number;
     lng: number;
@@ -9,6 +12,7 @@ interface StreetViewProps {
 
 const StreetView: React.FC<StreetViewProps> = ({ lat, lng }) => {
     const streetViewRef = useRef<HTMLDivElement>(null);
+    let refrenceKey = lat + lng;
 
     useEffect(() => {
         const loader = new Loader({
@@ -29,6 +33,13 @@ const StreetView: React.FC<StreetViewProps> = ({ lat, lng }) => {
                 // @ts-ignore
                 window.setLocation = (lat, lng) => {
                     streetView.setPosition({ lat, lng });
+                    refrenceKey = lat + lng;
+                }
+
+                // @ts-ignore
+                window.getPlayerLocation = (key) => {
+                    if (refrenceKey != key) return "error";
+                    return streetView.getPosition()?.toJSON();
                 }
             }
         });
@@ -53,7 +64,7 @@ const Map: React.FC<StreetViewProps> = ({ lat, lng }) => {
             if (mapRef.current) {
                 const map = new google.maps.Map(mapRef.current, {
                     //center: { lat: 40, lng: -30 },
-                    center: { lat: 59.66, lng: 9.66 },
+                    center: { lat: startLatmap, lng: startLngmap },
                     zoom: 12,
                     mapTypeControl: false,
                     streetViewControl: false,

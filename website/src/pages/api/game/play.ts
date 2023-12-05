@@ -49,7 +49,7 @@ export default async function validate(req: NextApiRequest, res: NextApiResponse
     const fp_data = JSON.parse(fingerprint.data);
 
     const useragent = req.headers['user-agent'];
-    const ip_address = req.headers['CF-Connecting-IP'] || req.connection.remoteAddress;
+    const ip_address = req.headers['cf-connecting-ip'] || req.connection.remoteAddress;
 
     const useragent_mismatch = fp_data.USERAGENT != useragent;
     const ip_mismatch = session.ip_address != ip_address;

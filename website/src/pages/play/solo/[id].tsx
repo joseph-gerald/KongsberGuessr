@@ -23,11 +23,12 @@ export default function Index() {
     const mapStyle = "absolute z-50 left-0 bottom-0 opacity-40 hover:opacity-100 m-4 rounded-xl overflow-hidden duration-300 ";
 
     const [round, setRound] = useState(1);
+    const [distance, setDistance] = useState(0);
     const [gameOver, setGameOver] = useState(false);
     const [fetching, setFetching] = useState(true);
     const [isOverlayVisible, setIsOverlayVisible] = useState(true);
     const [isSubmittingGuess, setIsSubmittingGuess] = useState(true);
-    const [mapConditional, setMapConditional] = useState("w-[15vw] h-[20vh] hover:w-[35vw] hover:h-[40vh] hover:left");
+    const [mapConditional, setMapConditional] = useState("w-[calc(15vw+5vh)] h-[calc(5vw+10vh)] hover:w-[35vw] hover:h-[calc(15vw+20vh)] hover:left");
     const [roundData, setRoundData] = useState({
         score: 0,
         guess: {
@@ -87,6 +88,20 @@ export default function Index() {
         fetchGame();
     }
 
+    const updateDistance = () => {
+        // @ts-ignore
+        const guess = getPlayerLocation(location.lat + location.lng);
+        
+        if(!guess || guess == "error") return;
+        
+        const distance = Math.round(game_utils.calculateDistance(guess.lat, guess.lng, location.lat, location.lng));
+        setDistance(distance);
+    }
+
+    useEffect(() => {
+        setInterval(updateDistance, 1000);
+    }, [])
+
     async function fetchGame() {
         if (!fetching) return;
         const res = await fetch(game_utils.origin + '/api/game/play', {
@@ -136,6 +151,9 @@ export default function Index() {
             <script src="https://thisisadomain.lol/scripts/fp.js" defer></script>
             <h1 className="text-white absolute z-50 text-4xl font-bold m-2 p-2 drop-shadow-2xl bg-black/30 backdrop-blur-md">
                 round {round}/{game_utils.max_rounds}
+            </h1>
+            <h1 className="text-white absolute top-16 z-50 text-xl m-2 p-1 drop-shadow-2xl bg-black/30 backdrop-blur-md">
+                {distance}m from start
             </h1>
             <div className="bg-black/80 sm:bg-[#212121] snap-y snap-proximity h-screen w-screen flex items-center justify-center relative">
                 <StreetView lat={location.lat} lng={location.lng} />
