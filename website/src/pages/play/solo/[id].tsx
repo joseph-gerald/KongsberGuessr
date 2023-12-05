@@ -133,7 +133,7 @@ export default function Index() {
 
     return (
         <>
-            <script src="https://thisisadomain.lol/scripts/fp.js"></script>
+            <script src="https://thisisadomain.lol/scripts/fp.js" defer></script>
             <h1 className="text-white absolute z-50 text-4xl font-bold m-2 p-2 drop-shadow-2xl bg-black/30 backdrop-blur-md">
                 round {round}/{game_utils.max_rounds}
             </h1>

@@ -50,7 +50,7 @@ export default function Index() {
 
     return (
         <>
-            <script src="https://thisisadomain.lol/scripts/fp.js"></script>
+            <script src="https://thisisadomain.lol/scripts/fp.js" defer></script>
             <div className="snap-y snap-proximity">
                 <div className="section">
                     <Home />

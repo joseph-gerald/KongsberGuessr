@@ -28,7 +28,7 @@ export default function Select() {
 
     return (
         <>
-            <script src="https://thisisadomain.lol/scripts/fp.js"></script>
+            <script src="https://thisisadomain.lol/scripts/fp.js" defer></script>
 
             <div className="bg-black/80 sm:bg-[#212121] snap-y snap-proximity h-screen w-screen flex items-center justify-center relative">
                 <div className="circle hidden sm:inline-block">
