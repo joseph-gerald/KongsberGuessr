@@ -1,7 +1,16 @@
-# KongsberGuessr
-Project for school.
+![image](https://github.com/joseph-gerald/KongsberGuessr/assets/73967013/a9a2feec-f35a-419a-8f52-8b1badf68638)
+
+<p align="center">
+  <strong>School project</strong>
+  •
+  <a href="https://kbg.jooo.tech">
+    <strong>Play🎮</strong>
+  </a>
+</p>
+<p align="center">
+Learn and become more familiar with Kongsberg in a fun and intuitive way!
+</p>
 <br>
-[demo @ kbg.jooo.tech](https://kbg.jooo.tech)
 
 ## Features ✨
 - Accounts
