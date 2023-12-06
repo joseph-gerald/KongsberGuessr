@@ -14,7 +14,7 @@ export default async function validate(req: NextApiRequest, res: NextApiResponse
         return
     }
 
-    let { token } = req.body;
+    let { token, ip_address } = req.body;
 
     if (!token) {
         res.status(400).json({ error: 'Missing token' })   
@@ -31,6 +31,11 @@ export default async function validate(req: NextApiRequest, res: NextApiResponse
     const user = await User.findOne({ _id: session.user })
 
     if (!user) {
+        res.status(400).json({ error: 'Invalid token' })
+        return;
+    }
+
+    if (session.ip_address != ip_address) {
         res.status(400).json({ error: 'Invalid token' })
         return;
     }
