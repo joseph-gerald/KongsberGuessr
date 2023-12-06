@@ -5,6 +5,7 @@ import client from '../_db';
 import game_utils from '../../../../utils/game_utils';
 import Fingerprint from '../../../../models/Fingerprint';
 import User from '../../../../models/User';
+import tracking_utils from '../../../../utils/tracking_utils';
 
 client.db("KongsberGuessr").collection("users");
 
@@ -49,10 +50,10 @@ export default async function validate(req: NextApiRequest, res: NextApiResponse
     const fp_data = JSON.parse(fingerprint.data);
 
     const useragent = req.headers['user-agent'];
-    const ip_address = req.headers['cf-connecting-ip'] || req.connection.remoteAddress;
+    const ip_address = req.headers['cf-connecting-ip'] || req.socket.remoteAddress;
 
     const useragent_mismatch = fp_data.USERAGENT != useragent;
-    const ip_mismatch = session.ip_address != ip_address;
+    const ip_mismatch = tracking_utils.isSameIP(session.ip_address, ip_address);
 
     if (useragent_mismatch || ip_mismatch) {
         res.status(401).json({ error: 'Invalid' })

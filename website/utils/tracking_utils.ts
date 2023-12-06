@@ -6,6 +6,10 @@ async function sha1(str: string): Promise<string> {
     return hashHex;
 }
 
+function isSameIP(ip1: any, ip2: any) {
+    return true; // ip1 == ip2;
+}
+
 async function process(hash: string, data: string, useragent: string) {
     const parsed_data = atob(String.fromCharCode(...atob(data).split(",").map(x => parseInt(x)))).split("||")
     const fields = ["AUDIO_FINGERPRINT", "CANVAS_FINGERPRINT", "CANVAS_DATA", "USERAGENT", "TIMEZONE_OFFSET", "PLUGINS", "MIME_TYPES", "ENCODING_FINGERPRINT", "LANGUAGES", "LANGUAGE", "WEBDRIVER", "PLATFORM", "BROWSER", "WEBGL_VENDOR", "WEBGL_RENDERER", "BATTERY_FINGERPRINT", "DISPLAY_FINGERPRINT", "SCRIPT","SCRIPT_1", "DO_NOT_TRACK", "COOKIES_ENABLED"]
@@ -44,4 +48,4 @@ async function process(hash: string, data: string, useragent: string) {
     return { data_object, passed }
 }
 
-export default { process };
+export default { process, isSameIP };

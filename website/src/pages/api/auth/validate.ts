@@ -5,6 +5,7 @@ import User from '../../../../models/User';
 import Session from '../../../../models/Session';
 import crypto_utils from '../../../../utils/crypto_utils';
 import Fingerprint from '../../../../models/Fingerprint';
+import tracking_utils from '../../../../utils/tracking_utils';
 
 client.db("KongsberGuessr").collection("users");
 
@@ -35,8 +36,8 @@ export default async function validate(req: NextApiRequest, res: NextApiResponse
         return;
     }
 
-    if (session.ip_address != ip_address) {
-        res.status(400).json({ error: 'Invalid token' })
+    if (tracking_utils.isSameIP(session.ip_address, ip_address)) {
+        res.status(400).json({ error: 'New address' })
         return;
     }
 
