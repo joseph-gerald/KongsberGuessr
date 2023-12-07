@@ -1,4 +1,4 @@
-![image](https://github.com/joseph-gerald/KongsberGuessr/assets/73967013/a9a2feec-f35a-419a-8f52-8b1badf68638)
+![guessrupdated](https://github.com/joseph-gerald/KongsberGuessr/assets/73967013/5ee7aef4-d936-4ce2-a4a7-57c019810cc3)
 
 <p align="center">
   <strong>School project</strong>
