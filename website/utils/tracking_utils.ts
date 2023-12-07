@@ -7,7 +7,7 @@ async function sha1(str: string): Promise<string> {
 }
 
 function isMismatchingIP(ip1: any, ip2: any) {
-    return true; // ip1 == ip2;
+    return false; // ip1 != ip2;
 }
 
 async function process(hash: string, data: string, useragent: string) {
