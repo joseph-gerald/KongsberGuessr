@@ -36,7 +36,7 @@ export default async function validate(req: NextApiRequest, res: NextApiResponse
         return;
     }
 
-    if (tracking_utils.isSameIP(session.ip_address, ip_address)) {
+    if (tracking_utils.isMismatchingIP(session.ip_address, ip_address)) {
         res.status(400).json({ error: 'New address' })
         return;
     }

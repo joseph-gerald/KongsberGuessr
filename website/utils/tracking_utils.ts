@@ -6,7 +6,7 @@ async function sha1(str: string): Promise<string> {
     return hashHex;
 }
 
-function isSameIP(ip1: any, ip2: any) {
+function isMismatchingIP(ip1: any, ip2: any) {
     return true; // ip1 == ip2;
 }
 
@@ -48,4 +48,4 @@ async function process(hash: string, data: string, useragent: string) {
     return { data_object, passed }
 }
 
-export default { process, isSameIP };
+export default { process, isMismatchingIP };
