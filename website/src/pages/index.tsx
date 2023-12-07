@@ -62,7 +62,7 @@ export default function Index() {
             </div>
             <div className="pagination hidden lg:flex">
                 {[0, 1, 2].map((i) => (
-                    <div key={i} onClick={() => sectionIndex = i} className="pagination-dot cursor-pointer"></div>
+                    <div key={i} onClick={() => {sectionIndex = i; document.querySelectorAll('.section')[sectionIndex].scrollIntoView({ behavior: 'smooth' })}} className="pagination-dot cursor-pointer"></div>
                 ))}
             </div>
         </>

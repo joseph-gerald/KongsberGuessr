@@ -41,8 +41,8 @@ export default function Index() {
                         <div className="absolute sm:bg-black/50 p-2 backdrop-blur-md rounded-3xl">
                             <div className="flex flex-col sm:flex-row justify-between m-7">
                                 <div>
-                                    <h2 className="clash-display font-bold text-4xl text-white">Lvl {Math.ceil(xp / 5000)}</h2>
-                                    <h4 className="clash-display text-white/70 font-bold text-xl">{5000 - xp % 5000} XP from LVL {Math.ceil(xp / 5000) + 1}</h4>
+                                    <h2 className="clash-display font-bold text-4xl text-white">Lvl {Math.floor(xp / 5000)}</h2>
+                                    <h4 className="clash-display text-white/70 font-bold text-xl">{5000 - xp % 5000} XP from LVL {Math.floor(xp / 5000) + 1}</h4>
                                 </div>
                                 <div>
                                     <button onClick={showSelection} className="accent-to-primary font-semibold p-3 rounded-lg w-full mt-4 sm:mt-0 sm:w-32 text-xl">Play</button>

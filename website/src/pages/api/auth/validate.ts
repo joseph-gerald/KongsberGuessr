@@ -1,10 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import bcrypt from 'bcrypt';
 import client from '../_db';
 import User from '../../../../models/User';
 import Session from '../../../../models/Session';
-import crypto_utils from '../../../../utils/crypto_utils';
-import Fingerprint from '../../../../models/Fingerprint';
 import tracking_utils from '../../../../utils/tracking_utils';
 
 client.db("KongsberGuessr").collection("users");

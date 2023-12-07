@@ -1,4 +1,3 @@
-
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap");
 @import url("/css/clash-display.css");
 @import url("https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600&display=swap");
@@ -11,6 +10,11 @@
     --colour-primary: #34C1C5;
     --colour-secondary: #C3D7EF;
     --colour-accent: #306EB5;
+}
+
+select option {
+    background: white;
+    color: black;
 }
 
 body {
@@ -131,9 +135,9 @@ body {
     color: white;
 }
 
-.game-stat > h2 {
+.game-stat>h2 {
     font-size: 1.25rem;
     font-weight: 500;
     margin-bottom: 0.25rem;
-    color: rgba(255,255,255,0.8);
+    color: rgba(255, 255, 255, 0.8);
 }

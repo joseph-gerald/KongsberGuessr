@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import { StreetView, Map } from "../../../components/google/maps";
+import { StreetView, Map } from "../../../../components/google/maps";
 import { useRouter } from "next/router";
-import game_utils from '../../../../utils/game_utils';
+import game_utils from '../../../../../utils/game_utils';
 
 export default function Index() {
     const router = useRouter();
@@ -65,6 +65,7 @@ export default function Index() {
             body: JSON.stringify({
                 round: round,
                 action: "guess",
+                pvp: true,
                 id,
                 // @ts-ignore
                 guess: getLocation()
@@ -115,6 +116,7 @@ export default function Index() {
             body: JSON.stringify({
                 round: round,
                 action: "start",
+                pvp: true,
                 id
             })
         });
