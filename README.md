@@ -18,6 +18,7 @@ Learn and become more familiar with Kongsberg in a fun and intuitive way!
 - Leaderboard
 - Geography Game
 - Fun
+- Multiplayer (wip, soon)
 
 ## Screenshots
 
