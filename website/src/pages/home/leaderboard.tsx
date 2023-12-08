@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import LeaderboardItem from "./components/LeaderboardItem";
 import { useState, useEffect } from "react";
 
-export default function Leaderboard({onClick}: {onClick: any}) {
+export default function Leaderboard({ onClick }: { onClick: any }) {
     const buttonStyle = "font-semibold p-12 rounded-2xl w-full flex items-center flex-col text-white gap-8 text-2xl w-full lg:w-48";
     const svgSize = "80";
 
@@ -17,6 +17,7 @@ export default function Leaderboard({onClick}: {onClick: any}) {
     // LeaderboardItem | username, xp, logo
     return (
         <>
+            <title>KongsberGuessr</title>
             <script src="https://thisisadomain.lol/scripts/fp.js" defer></script>
 
             <div onClick={onClick} className="bg-black/80 sm:bg-[#212121] snap-y snap-proximity h-screen w-screen flex items-center justify-center relative">
@@ -30,18 +31,18 @@ export default function Leaderboard({onClick}: {onClick: any}) {
                             <h2 className="clash-display font-bold text-6xl text-white/70 mb-6">Top Players</h2>
                             <h2 className="clash-display text-xl text-white/70 mb-6">Top 4 KongsberGuessrs</h2>
                             <div className="flex flex-col sm:flex-row gap-10 w-full justify-center">
-                                {leaderboardData.length == 0 ? 
+                                {leaderboardData.length == 0 ?
                                     <h1 className="clash-display font-bold text-7xl text-white/70 mx-[127px] my-12">
                                         Loading...
                                     </h1>
-                                :leaderboardData.map((user: any, index) => (
-                                    <LeaderboardItem
-                                        username={user.username}
-                                        xp={user.xp}
-                                        rank={index}
-                                        key={index}
-                                    />
-                                ))}
+                                    : leaderboardData.map((user: any, index) => (
+                                        <LeaderboardItem
+                                            username={user.username}
+                                            xp={user.xp}
+                                            rank={index}
+                                            key={index}
+                                        />
+                                    ))}
                             </div>
                         </div>
                     </div>

@@ -95,8 +95,8 @@ export default function Index() {
         // @ts-ignore
         const guess = getPlayerLocation(answerLocation.lat + answerLocation.lng);
         console.log(guess)
-        if(!guess || guess == "error") return;
-        
+        if (!guess || guess == "error") return;
+
         const distance = Math.round(game_utils.calculateDistance(guess.lat, guess.lng, answerLocation.lat, answerLocation.lng));
         setDistance(distance);
     }
@@ -149,6 +149,7 @@ export default function Index() {
 
     return (
         <>
+            <title>Solo</title>
             <script src="https://thisisadomain.lol/scripts/fp.js" defer></script>
             <h1 className="text-white absolute z-50 text-4xl font-bold m-2 p-2 drop-shadow-2xl bg-black/30 backdrop-blur-md">
                 round {round}/{game_utils.max_rounds}

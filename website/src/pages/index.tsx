@@ -48,6 +48,7 @@ export default function Index() {
 
     return (
         <>
+            <title>KongsberGuessr</title>
             <script src="https://thisisadomain.lol/scripts/fp.js" defer></script>
             <div className="snap-y snap-proximity">
                 <div className="section">
@@ -62,7 +63,7 @@ export default function Index() {
             </div>
             <div className="pagination hidden lg:flex">
                 {[0, 1, 2].map((i) => (
-                    <div key={i} onClick={() => {sectionIndex = i; document.querySelectorAll('.section')[sectionIndex].scrollIntoView({ behavior: 'smooth' })}} className="pagination-dot cursor-pointer"></div>
+                    <div key={i} onClick={() => { sectionIndex = i; document.querySelectorAll('.section')[sectionIndex].scrollIntoView({ behavior: 'smooth' }) }} className="pagination-dot cursor-pointer"></div>
                 ))}
             </div>
         </>

@@ -149,6 +149,7 @@ export default function Index() {
         case "start":
             return (
                 <>
+                    <title>Room Actions</title>
                     <script src="https://thisisadomain.lol/scripts/fp.js" defer></script>
                     <img src="https://i.redd.it/zvv33s6vkmp21.jpg" className="h-screen w-screen blur absolute" />
                     <div className={`absolute top-0 backdrop-blur-xl h-screen w-screen bg-black/80`}>
@@ -173,6 +174,7 @@ export default function Index() {
         case "join":
             return (
                 <>
+                    <title>Join Room</title>
                     <script src="https://thisisadomain.lol/scripts/fp.js" defer></script>
                     <img src="https://i.redd.it/zvv33s6vkmp21.jpg" className="h-screen w-screen blur absolute" />
                     <div className={`absolute top-0 backdrop-blur-xl h-screen w-screen bg-black/80`}>
@@ -208,6 +210,7 @@ export default function Index() {
         case "create":
             return (
                 <>
+                    <title>Create Room</title>
                     <script src="https://thisisadomain.lol/scripts/fp.js" defer></script>
                     <img src="https://i.redd.it/zvv33s6vkmp21.jpg" className="h-screen w-screen blur absolute" />
                     <div className={`absolute top-0 backdrop-blur-xl h-screen w-screen bg-black/80`}>
@@ -248,6 +251,7 @@ export default function Index() {
         case "waiting":
             return (
                 <>
+                    <title>Waiting Room</title>
                     <script src="https://thisisadomain.lol/scripts/fp.js" defer></script>
                     <img src="https://i.redd.it/zvv33s6vkmp21.jpg" className="h-screen w-screen blur absolute" />
                     <div className={`absolute top-0 backdrop-blur-xl h-screen w-screen bg-black/80`}>

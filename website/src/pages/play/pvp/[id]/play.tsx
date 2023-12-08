@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { StreetView, Map } from "../../../../components/google/maps";
 import { useRouter } from "next/router";
 import game_utils from '../../../../../utils/game_utils';
+import { get } from "http";
 
 export default function Index() {
     const router = useRouter();
@@ -21,16 +22,25 @@ export default function Index() {
     let location = {
         lat: 59.9139,
         lng: 10.7522,
+        isHost: false,
+        max_rounds: 0,
     };
 
     const mapStyle = "absolute z-50 left-0 bottom-0 opacity-40 hover:opacity-100 m-4 rounded-xl overflow-hidden duration-300 ";
 
+    const [playersStatus, setPlayersStatus] = useState([
+
+    ]);
+
     const [round, setRound] = useState(1);
     const [distance, setDistance] = useState(0);
+    const [maxRounds, setMaxRounds] = useState(0);
     const [gameOver, setGameOver] = useState(false);
+    const [toUpdate, setToUpdate] = useState(false);
     const [fetching, setFetching] = useState(true);
     const [isOverlayVisible, setIsOverlayVisible] = useState(true);
     const [isSubmittingGuess, setIsSubmittingGuess] = useState(true);
+    const [isHost, setIsHost] = useState(false);
     const [mapConditional, setMapConditional] = useState("w-[calc(15vw+5vh)] h-[calc(5vw+10vh)] hover:w-[35vw] hover:h-[calc(15vw+20vh)] hover:left");
     const [roundData, setRoundData] = useState({
         score: 0,
@@ -78,31 +88,76 @@ export default function Index() {
         setIsSubmittingGuess(false);
     };
 
-    const handleNext = () => {
-        setIsOverlayVisible(false);
+    const performUpdate = async (bypass = false) => {
+        console.log(toUpdate, bypass)
+        if (!toUpdate && !bypass) return;
+        const res = await fetch('/api/game/play', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                action: "update",
+                round: round,
+                pvp: true,
+                id
+            })
+        });
+
+        if (res.status != 200) {
+            alert("ERROR: " + (await res.json()).error + "\nGoing to Home");
+            router.push("/home");
+            return;
+        }
+
+        const data = await res.json();
+        const players = data.players;
+
+        if (data.startNextRound) {
+            getNextGame();
+            return;
+        }
+
+        setPlayersStatus(players);
+    }
+
+    useEffect(() => {
+        performUpdate();
+    }, [playersStatus])
+
+    const handleNext = async () => {
         setIsSubmittingGuess(true);
 
+        setOverlayText("");
+        setIsOverlayVisible(true);
+        setToUpdate(true);
+
+        performUpdate(true);
+    }
+
+    const getNextGame = () => {
+        setToUpdate(false);
         setRound(round + 1)
         setFetching(true);
 
         // @ts-ignore
         clearStuff();
         setOverlayText("Fetching Challenge...")
-        setIsOverlayVisible(true);
-        fetchGame();
+        setToUpdate(false)
     }
 
     const updateDistance = () => {
         // @ts-ignore
         const guess = getPlayerLocation(answerLocation.lat + answerLocation.lng);
         console.log(guess)
-        if(!guess || guess == "error") return;
-        
+        if (!guess || guess == "error") return;
+
         const distance = Math.round(game_utils.calculateDistance(guess.lat, guess.lng, answerLocation.lat, answerLocation.lng));
         setDistance(distance);
     }
 
     useEffect(() => {
+        performUpdate();
         setInterval(updateDistance, 1000);
     }, [])
 
@@ -145,15 +200,21 @@ export default function Index() {
 
         setIsOverlayVisible(false);
         setIsSubmittingGuess(true);
+
+        setIsHost(location.isHost);
+        setMaxRounds(location.max_rounds);
     }
 
-    fetchGame();
+    useEffect(() => {
+        fetchGame();
+    }, [fetching])
 
     return (
         <>
+            <title>PvP</title>
             <script src="https://thisisadomain.lol/scripts/fp.js" defer></script>
             <h1 className="text-white absolute z-50 text-4xl font-bold m-2 p-2 drop-shadow-2xl bg-black/30 backdrop-blur-md">
-                round {round}/{game_utils.max_rounds}
+                round {round}/{maxRounds}
             </h1>
             <h1 className="text-white absolute top-16 z-50 text-xl m-2 p-1 drop-shadow-2xl bg-black/30 backdrop-blur-md">
                 {distance}m from start
@@ -167,6 +228,16 @@ export default function Index() {
                     </button>
                 </div>
             </div>
+
+            {
+                toUpdate && isHost ? (
+                    <button onClick={() => getNextGame()} className="absolute w-64 mt-8 accent-to-primary font-semibold p-3 rounded-lg left-1/2 -translate-x-1/2 bottom-5 z-50 hover:saturate-0 duration-300">
+                        Next Round
+                    </button>
+                ) : (
+                    <></>
+                )
+            }
             <div className={`z-40 absolute top-0 backdrop-blur-xl h-screen w-screen bg-black/80 ${isOverlayVisible ? 'block' : 'hidden'}`}>
                 {
                     isSubmittingGuess ? (
@@ -175,7 +246,33 @@ export default function Index() {
                                 {overlayText}
                             </h1>
                             <h4 className="text-4xl text-white/50">
-                                {overlayDescription}
+                                {
+                                    toUpdate ? (
+                                        <>
+                                            {
+                                                playersStatus.map((player: any, index) => {
+                                                    return (
+                                                        <div key={index} className="flex justify-between w-full gap-3 font-light text-white/20">
+                                                            <h4 className="text-white">
+                                                                {!player.roundsIncompleted ? "👍" : "⏳"}
+                                                            </h4>
+                                                            |
+                                                            <h4 className="accent-to-primary-text">
+                                                                {player.username}
+                                                            </h4>
+                                                            |
+                                                            <h4 className="font-normal text-white/80">
+                                                                {player.totalScore} points
+                                                            </h4>
+                                                        </div>
+                                                    )
+                                                })
+                                            }
+                                        </>
+                                    ) : (
+                                        overlayDescription
+                                    )
+                                }
                             </h4>
                         </div>
                     ) : (

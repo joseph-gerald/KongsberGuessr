@@ -18,7 +18,7 @@ class Game {
 
 class PvPGame extends Game {
     started: boolean = false;
-    players: any[] = [];
+    players: any = {};
     rounds: any = {};
     public: any = {
         players: []
@@ -84,7 +84,7 @@ export default async function validate(req: NextApiRequest, res: NextApiResponse
             const pvpGame = new PvPGame(token);
             game = games[token] = pvpGame;
 
-            pvpGame.players.push(user._id);
+            pvpGame.players[token] = user.username;
             pvpGame.public.players.push({ id: String(user._id).slice(0, 6), username: user.username, xp: user.xp });
             pvpGame.public.started = false;
 
@@ -92,22 +92,42 @@ export default async function validate(req: NextApiRequest, res: NextApiResponse
             break;
         case "update":
             {
-                const settings = req.body.settings;
-
-                if (!gameFound) {
-                    res.status(404).json({ error: "Found no game with ID" })
+                if (!(gameFound instanceof PvPGame)) {
+                    res.status(400).json({ error: 'Invalid game' })
                     return;
                 }
+                if (!gameFound.started || gameFound.rounds[token] == null) {
+                    const settings = req.body.settings;
 
-                if (!(gameFound instanceof PvPGame)) return;
+                    if (!gameFound) {
+                        res.status(404).json({ error: "Found no game with ID" })
+                        return;
+                    }
 
-                const isHost = gameFound.token == token;
+                    if (!(gameFound instanceof PvPGame)) return;
 
-                if (isHost) {
-                    gameFound.public.settings = settings;
+                    const isHost = gameFound.token == token;
+
+                    if (isHost && settings) {
+                        gameFound.public.settings = settings;
+                    }
+
+                    res.json(gameFound.public);
+                } else {
+                    const rounds = gameFound.rounds;
+                    const players = gameFound.players;
+                    const highestRound = Object.keys(rounds).map(token => Object.keys(rounds[token]).length).sort((a, b) => b - a)[0];
+                    const playerAndScores = Object.keys(rounds).map(token => {
+                        const username = players[token];
+
+                        const roundsIncompleted = Object.keys(rounds[token]).filter(round => rounds[token][round].guess == null).length;
+                        const totalScore = Object.values(rounds[token]).map((round: any) => round.score).reduce((x, y) => x + y);
+
+                        return { username, roundsIncompleted, totalScore };
+                    })
+
+                    res.json({ players: playerAndScores, startNextRound: highestRound > round });
                 }
-
-                res.json(gameFound.public);
             }
             break;
         case "join":
@@ -129,14 +149,14 @@ export default async function validate(req: NextApiRequest, res: NextApiResponse
                     return;
                 }
 
-                const hasAlreadyJoined = gameFound.players.filter(player => JSON.stringify(player) == JSON.stringify(user._id)).length > 0;
+                const hasAlreadyJoined = Object.keys(gameFound.players).includes(token);
 
                 if (hasAlreadyJoined) {
                     res.status(400).json({ error: 'Already joined' })
                     return;
                 }
 
-                gameFound.players.push(user._id);
+                gameFound.players[token] = user.username;
                 gameFound.public.players.push({ id: String(user._id).slice(0, 6), username: user.username, xp: user.xp });
 
                 res.json({
@@ -156,11 +176,10 @@ export default async function validate(req: NextApiRequest, res: NextApiResponse
                         return;
                     }
 
-                    /*
-                    if (game.players.length < 2) {
+                    if (Object.keys(game.players).length < 2) {
                         res.status(400).json({ error: 'Not enough players' })
                         return;
-                    }*/
+                    }
 
                     game.public.rounds = [];
 
@@ -169,6 +188,7 @@ export default async function validate(req: NextApiRequest, res: NextApiResponse
                             round_id: 0,
                             started: Date.now(),
                             location: await game_utils.getRandomPlace(),
+                            rounds: {}
                         }
                     } else {
                         game.public.rounds[0] = {};
@@ -181,14 +201,31 @@ export default async function validate(req: NextApiRequest, res: NextApiResponse
                     const currentRound = game.public.rounds.length;
                     const isHost = game.token == token;
 
+                    if (round > game.public.settings.rounds) {
+                        return res.status(210).json({ status: "todo" });
+                    }
+
                     console.log(round, currentRound)
                     if (round != currentRound) {
-                        res.status(400).json({ error: 'Invalid round' })
-                        return;
+                        if (isHost) {
+                            if (game.public.settings.challenges == "Everyone Same") {
+                                game.public.rounds[round - 1] = {
+                                    round_id: 0,
+                                    started: Date.now(),
+                                    location: await game_utils.getRandomPlace(),
+                                    rounds: {}
+                                }
+                            } else {
+                                game.public.rounds[round - 1] = {};
+                            }
+                        } else {
+                            res.status(400).json({ error: 'Invalid round' })
+                            return;
+                        }
                     }
 
                     if (game.public.settings.challenges == "Everyone Same") {
-                        res.json(game.public.rounds[0].location);
+                        res.json({ ...game.public.rounds[round - 1].location, ...{ isHost, max_rounds: game.public.settings.rounds } });
                     } else {
                         const currentRound = {
                             round_id: round,
@@ -201,11 +238,10 @@ export default async function validate(req: NextApiRequest, res: NextApiResponse
                             time_taken: null,
                         };
 
-                        game.rounds[token] = {};
+                        if (!game.rounds[token]) game.rounds[token] = {};
                         game.rounds[token][round] = currentRound;
 
-                        res.json(currentRound.location);
-
+                        res.json({ ...{ lat: currentRound.location.lat, lng: currentRound.location.lng }, ...{ isHost, max_rounds: game.public.settings.rounds } });
                     }
                 }
             } else if (!pvp) {
@@ -253,9 +289,15 @@ export default async function validate(req: NextApiRequest, res: NextApiResponse
                 return;
             }
 
-            const isPvP = pvp && gameFound != null && gameFound instanceof PvPGame;
-            
-            if (isPvP && gameFound != null) rnd = gameFound.rounds[token][round];
+            const isPvP = pvp;
+
+            if (isPvP && gameFound != null && gameFound instanceof PvPGame) {
+                if (gameFound.public.settings.challenges == "Everyone Same") {
+                    rnd = { ...gameFound.public.rounds[round - 1].rounds[token], ...gameFound.public.rounds[round - 1] };
+                } else {
+                    rnd = gameFound.rounds[token][round];
+                }
+            }
 
             const answer = rnd.location;
 

@@ -5,7 +5,7 @@ export default function Select() {
     const svgSize = "80";
 
     const router = useRouter();
-    
+
     const createGame = async (mode: string) => {
         const res = await fetch('/api/game/play', {
             method: 'POST',
@@ -30,6 +30,7 @@ export default function Select() {
 
     return (
         <>
+            <title>KongsberGuessr</title>
             <script src="https://thisisadomain.lol/scripts/fp.js" defer></script>
 
             <div className="bg-black/80 sm:bg-[#212121] snap-y snap-proximity h-screen w-screen flex items-center justify-center relative">
