@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { StreetView, Map } from "../../../../components/google/maps";
 import { useRouter } from "next/router";
 import game_utils from '../../../../../utils/game_utils';
-import { get } from "http";
 
 export default function Index() {
     const router = useRouter();

@@ -31,6 +31,7 @@ export default function Setting({ name, type, data, state }: { name: string, typ
                         <input
                             className="w-full"
                             type="range"
+                            value={rangeValue}
                             min={data.min}
                             max={data.max}
                             onChange={event => handleRangeChange(event)}

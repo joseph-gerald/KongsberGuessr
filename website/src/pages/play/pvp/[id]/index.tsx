@@ -145,6 +145,8 @@ export default function Index() {
 
     updateRoom();
 
+    const buttonStyle = "accent-to-primary-text hover:hue-rotate-15 hover:scale-105 duration-300 font-bold p-3 rounded-lg w-full text-3xl";
+
     switch (state) {
         case "start":
             return (
@@ -159,12 +161,15 @@ export default function Index() {
                         <div className="font-bold center-self absolute text-white items-center flex flex-col justify-center">
                             <button
                                 onClick={() => startCreation()}
-                                className="accent-to-primary hover:hue-rotate-15 duration-200 mt-4 font-bold p-3 rounded-lg w-full text-xl">
+                                className={buttonStyle}>
                                 Create a room
                             </button>
+                            <h4 className="text-xl text-white/75 cursor-default select-none">
+                                Or
+                            </h4>
                             <button
                                 onClick={() => setState("join")}
-                                className="accent-to-primary hover:hue-rotate-15 duration-200 mt-4 font-bold p-3 rounded-lg w-full text-xl">
+                                className={buttonStyle}>
                                 Join a room
                             </button>
                         </div>
@@ -216,6 +221,9 @@ export default function Index() {
                     <div className={`absolute top-0 backdrop-blur-xl h-screen w-screen bg-black/80`}>
                         <h2 className="absolute left-1/2 -translate-x-1/2 top-10 text-4xl text-white/80">
                             Your room code is <b className="accent-to-primary-text">{id}</b>
+                        </h2>
+                        <h2 className={`absolute font-bold left-1/2 -translate-x-1/2 top-24 text-2xl ${infoColour}`}>
+                            {info}
                         </h2>
                         <div className="font-bold center-self absolute text-white items-center flex flex-col justify-center">
                             <div className="w-full flex flex-col items-center gap-10">

@@ -168,7 +168,6 @@ export default async function validate(req: NextApiRequest, res: NextApiResponse
             if (gameFound instanceof PvPGame) {
                 const game = gameFound;
                 if (!game.started) {
-                    game.started = true;
                     const isHost = game.token == token;
 
                     if (!isHost) {
@@ -176,11 +175,12 @@ export default async function validate(req: NextApiRequest, res: NextApiResponse
                         return;
                     }
 
-                    if (Object.keys(game.players).length < 2) {
+                    if (Object.keys(game.players).length < 1) {
                         res.status(400).json({ error: 'Not enough players' })
                         return;
                     }
 
+                    game.started = true;
                     game.public.rounds = [];
 
                     if (game.public.settings.challenges == "Everyone Same") {
@@ -225,7 +225,17 @@ export default async function validate(req: NextApiRequest, res: NextApiResponse
                     }
 
                     if (game.public.settings.challenges == "Everyone Same") {
-                        res.json({ ...game.public.rounds[round - 1].location, ...{ isHost, max_rounds: game.public.settings.rounds } });
+                        const personalGame = gameFound.public.rounds[round - 1].rounds[token] = {
+                            round_id: round,
+                            started: Date.now(),
+                            finished: null,
+                            score: 0,
+                            location: game.public.rounds[round - 1].location,
+                            distance: null,
+                            guess: null,
+                            time_taken: null,
+                        };
+                        res.json({ ...personalGame.location, ...{ isHost, max_rounds: game.public.settings.rounds } });
                     } else {
                         const currentRound = {
                             round_id: round,
@@ -278,6 +288,7 @@ export default async function validate(req: NextApiRequest, res: NextApiResponse
             return;
         case "guess":
             const guess = req.body.guess;
+            const sameChallenge = gameFound != null && gameFound instanceof PvPGame ? gameFound.public.settings.challenges == "Everyone Same" : false;
 
             if (!guess) {
                 res.status(400).json({ error: 'Missing guess' })
@@ -292,8 +303,9 @@ export default async function validate(req: NextApiRequest, res: NextApiResponse
             const isPvP = pvp;
 
             if (isPvP && gameFound != null && gameFound instanceof PvPGame) {
-                if (gameFound.public.settings.challenges == "Everyone Same") {
-                    rnd = { ...gameFound.public.rounds[round - 1].rounds[token], ...gameFound.public.rounds[round - 1] };
+                if (sameChallenge) {
+                    console.log(gameFound.public.rounds[round - 1].rounds)
+                    rnd = gameFound.public.rounds[round - 1].rounds[token];
                 } else {
                     rnd = gameFound.rounds[token][round];
                 }
