@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { StreetView, Map } from "../../../../components/google/maps";
 import { useRouter } from "next/router";
 import game_utils from '../../../../../utils/game_utils';
+import { set } from "mongoose";
 
 export default function Index() {
     const router = useRouter();
@@ -117,7 +118,7 @@ export default function Index() {
             return;
         }
 
-        setPlayersStatus(players);
+        setPlayersStatus(players.sort((a: any, b: any) => a.totalScore - b.totalScore));
     }
 
     useEffect(() => {
@@ -179,8 +180,8 @@ export default function Index() {
             case 200:
                 break;
             case 210:
-                setOverlayText("Game Over");
-                setOverlayDescription("You scored a total of " + (await res.json()).total + " points");
+                setOverlayText("");
+                setPlayersStatus((await res.json()).data.sort((a: any, b: any) => a.totalScore - b.totalScore));
                 setGameOver(true)
                 return;
             default:
@@ -269,7 +270,46 @@ export default function Index() {
                                             }
                                         </>
                                     ) : (
-                                        overlayDescription
+                                        gameOver ? (
+                                            <>
+                                                <div className="flex justify-between w-full border-b-2 border-solid border-white/50 gap-3 font-bold text-white/80 mb-3 pb-2">
+                                                    <h4 className="text-yellow-400">
+                                                        #
+                                                    </h4>
+                                                    |
+                                                    name
+                                                    |
+                                                    score
+                                                    |
+                                                    AP/R
+                                                </div>
+                                                {
+                                                    playersStatus.map((player: any, index) => {
+                                                        return (
+                                                            <div key={index} className="flex justify-between w-full gap-3 font-light text-white/80">
+                                                                {
+                                                                    ["🥇", "🥈", "🥉"][index] ? ["🥇", "🥈", "🥉"][index] : index + 1
+                                                                }
+                                                                |
+                                                                <h4 className="accent-to-primary-text">
+                                                                    {player.username}
+                                                                </h4>
+                                                                |
+                                                                <h4 className="font-normal">
+                                                                    {player.totalScore}
+                                                                </h4>
+                                                                |
+                                                                <h4>
+                                                                    {player.totalScore / player.roundsPlayed}
+                                                                </h4>
+                                                            </div>
+                                                        )
+                                                    })
+                                                }
+                                            </>
+                                        ) : (
+                                            overlayDescription
+                                        )
                                     )
                                 }
                             </h4>

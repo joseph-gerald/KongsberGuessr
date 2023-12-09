@@ -1,5 +1,5 @@
-const origin = "https://dev.jooo.tech"; // idk where else to put ok?
-const apiKey = "AIzaSyDPd41N40KlY6TvlPUVeA0MYIB6jmYIY64";
+const origin: string = process.env.NEXT_PUBLIC_ORIGIN as string;
+const apiKey: string = process.env.NEXT_PUBLIC_API_KEY as string;
 
 const max_rounds = 5;
 
