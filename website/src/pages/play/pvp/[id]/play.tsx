@@ -118,7 +118,7 @@ export default function Index() {
             return;
         }
 
-        setPlayersStatus(players.sort((a: any, b: any) => a.totalScore - b.totalScore));
+        setPlayersStatus(players.sort((a: any, b: any) => a.totalScore - b.totalScore).reverse());
     }
 
     useEffect(() => {
@@ -181,7 +181,7 @@ export default function Index() {
                 break;
             case 210:
                 setOverlayText("");
-                setPlayersStatus((await res.json()).data.sort((a: any, b: any) => a.totalScore - b.totalScore));
+                setPlayersStatus((await res.json()).data.sort((a: any, b: any) => a.totalScore - b.totalScore).reverse());
                 setGameOver(true)
                 return;
             default:
