@@ -18,7 +18,7 @@ Learn and become more familiar with Kongsberg in a fun and intuitive way!
 - Leaderboard
 - Geography Game
 - Fun
-- Multiplayer (wip, soon)
+- Multiplayer (rough)
 
 ## Screenshots
 
@@ -62,6 +62,20 @@ Learn and become more familiar with Kongsberg in a fun and intuitive way!
 | ------------- |
 | ![image](https://github.com/joseph-gerald/KongsberGuessr/assets/73967013/404f19fb-aeae-483a-98c4-feeacf43fa5b) |
 
+#### Multiplayer (actions)
+
+| Action Selection |
+| ---------------- |
+| ![image](https://github.com/joseph-gerald/KongsberGuessr/assets/73967013/ee6ab742-0d30-4176-a603-9faa2ce2c813) |
+
+| Room Creator |
+| ------------- |
+| ![image](https://github.com/joseph-gerald/KongsberGuessr/assets/73967013/80cf2188-9b9f-4398-a569-f2b060a1bf33) |
+
+| Leaderboard |
+| ------------- |
+| ![image](https://github.com/joseph-gerald/KongsberGuessr/assets/73967013/b788fac0-05c5-4010-81fb-da8aef682022) |
+
 #### Game
 | Loading | 
 | --------- |
@@ -75,8 +89,18 @@ Learn and become more familiar with Kongsberg in a fun and intuitive way!
 | ------ |
 | ![image](https://github.com/joseph-gerald/KongsberGuessr/assets/73967013/fbcc5db5-22c4-443b-8462-afa9b68a2df0) |
 
-| Game Over |
+| Game Over (SOLO) |
 | --------- |
 | ![image](https://github.com/joseph-gerald/KongsberGuessr/assets/73967013/670f3b2d-5787-4f63-bdeb-5165ba432afa) |
 
+##### Game PvP
+
+| Waiting Screen (for other players to complete) |
+| -------------- |
+| ![image](https://github.com/joseph-gerald/KongsberGuessr/assets/73967013/438a7b1a-2dc7-45b5-a995-811f0b30c0ac) |
+
+
+| Game Over (PvP) |
+| --------------- |
+| ![image](https://github.com/joseph-gerald/KongsberGuessr/assets/73967013/4e743176-9995-4ef7-aac6-729dae3a80ec) |
 
