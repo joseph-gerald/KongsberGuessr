@@ -1,7 +1,10 @@
 const origin: string = process.env.NEXT_PUBLIC_ORIGIN as string;
 const apiKey: string = process.env.NEXT_PUBLIC_API_KEY as string;
+const privateApiKey: string = process.env.PRIVATE_API_KEY as string;
 
+const locations: Promise<{ lat: number, lng: number, address: string }>[] = [];
 const max_rounds = 5;
+const minimum_backlog = 20;
 
 const places = {
     Kongsberg: {
@@ -57,15 +60,19 @@ function calculateScore(round: any) {
 }
 
 async function getGeoData(lat: number, lng: number) {
-    return await (await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`)).json()
+    return fetch(`https://maps.googleapis.com/maps/api/geocode/json?key=${privateApiKey}&latlng=${lat},${lng}`)
+        .then(res => res.json()).then(data => data.results[0]);
 }
 
 async function getRandomPlace(): Promise<{ lat: number, lng: number, address: string }> {
     let lat = Math.random() * (boundings.latMax - boundings.latMin) + boundings.latMin;
     let lng = Math.random() * (boundings.lngMax - boundings.lngMin) + boundings.lngMin;
 
-    let data = await getGeoData(lat, lng);
-    const [latMin, latMax, lngMin, lngMax] = data.boundingbox.map(Number);
+    let data = (await getGeoData(lat, lng));
+
+    const {latMin, lngMin} = data.geometry.viewport.northeast;
+    const {latMax, lngMax} = data.geometry.viewport.southwest;
+    
     const area = calculateArea(latMin, latMax, lngMin, lngMax);
 
     if (area > 1E-5) {
@@ -76,15 +83,43 @@ async function getRandomPlace(): Promise<{ lat: number, lng: number, address: st
     const streetView = await getStreetView(lat, lng);
 
     if (!streetView.status || streetView.status !== "OK") {
-        console.log("not a valid street view, retrying");
+        //console.log("not a valid street view, retrying");
         return await getRandomPlace();
     }
 
     return {
         lat: streetView.location.lat,
         lng: streetView.location.lng,
-        address: data.display_name
+        address: data.formatted_address
     }
 }
 
-export default { getRandomPlace, calculateDistance, getGeoData, calculateScore, origin, apiKey, max_rounds, boundings };
+async function getValidPlace(size: number): Promise<{ lat: number, lng: number, address: string }> {
+    if (minimum_backlog > locations.length) {
+        const promises = [];
+
+        const placesToAdd = minimum_backlog - locations.length + 10; // add 10 extra to be sure
+
+        for (let i = 0; i < placesToAdd; i++) {
+            promises.push(getRandomPlace());
+        }
+
+        locations.push(...promises);
+    }
+
+    if (locations.length >= size) {
+        return locations.shift() as Promise<{ lat: number, lng: number, address: string }>;
+    }
+
+    const promises = [];
+
+    for (let i = 0; i < size; i++) {
+        promises.push(getRandomPlace());
+    }
+
+    locations.push(...promises);
+
+    return await Promise.race(promises);
+}
+
+export default { getValidPlace, getRandomPlace, calculateDistance, getGeoData, calculateScore, origin, apiKey, max_rounds, boundings };

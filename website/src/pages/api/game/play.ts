@@ -30,6 +30,10 @@ class PvPGame extends Game {
 
 let games: { [id: string]: Game; } = {};
 
+async function getRandomPlace() {
+    return await game_utils.getValidPlace(5)
+}
+
 export default async function validate(req: NextApiRequest, res: NextApiResponse) {
     const data = await tracking_utils.validateData(req, res);
     if (typeof data == "string") return;
@@ -187,7 +191,7 @@ export default async function validate(req: NextApiRequest, res: NextApiResponse
                         game.public.rounds[0] = {
                             round_id: 0,
                             started: Date.now(),
-                            location: await game_utils.getRandomPlace(),
+                            location: await getRandomPlace(),
                             rounds: {}
                         }
                     } else {
@@ -225,7 +229,7 @@ export default async function validate(req: NextApiRequest, res: NextApiResponse
                                 game.public.rounds[round - 1] = {
                                     round_id: 0,
                                     started: Date.now(),
-                                    location: await game_utils.getRandomPlace(),
+                                    location: await getRandomPlace(),
                                     rounds: {}
                                 }
                             } else {
@@ -259,7 +263,7 @@ export default async function validate(req: NextApiRequest, res: NextApiResponse
                             started: Date.now(),
                             finished: null,
                             score: 0,
-                            location: await game_utils.getRandomPlace(),
+                            location: await getRandomPlace(),
                             distance: null,
                             guess: null,
                             time_taken: null,
@@ -288,7 +292,7 @@ export default async function validate(req: NextApiRequest, res: NextApiResponse
                         started: Date.now(),
                         finished: null,
                         score: 0,
-                        location: await game_utils.getRandomPlace(),
+                        location: await getRandomPlace(),
                         distance: null,
                         guess: null,
                         time_taken: null,
@@ -324,7 +328,7 @@ export default async function validate(req: NextApiRequest, res: NextApiResponse
 
             const answer = rnd.location;
 
-            rnd.guess = { ...{ address: (await game_utils.getGeoData(guess.lat, guess.lng)).display_name }, ...guess };
+            rnd.guess = { ...{ address: (await game_utils.getGeoData(guess.lat, guess.lng)).formatted_address }, ...guess };
             rnd.finished = Date.now();
             rnd.time_taken = rnd.finished - rnd.started;
             rnd.distance = Math.round(game_utils.calculateDistance(answer.lat, answer.lng, guess.lat, guess.lng));
