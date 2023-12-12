@@ -30,9 +30,6 @@ export default function Index() {
         default:
             return (
                 <>
-                    <title>KongsberGuessr</title>
-                    <script src="https://thisisadomain.lol/scripts/fp.js" defer></script>
-
                     <div className="bg-black/80 sm:bg-[#212121] snap-y snap-proximity h-screen w-screen flex items-center justify-center relative">
 
                         <div className="circle hidden sm:inline-block">

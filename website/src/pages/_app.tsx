@@ -4,7 +4,7 @@ import client from './api/_db';
 
 
 export const metadata = {
-  title: "KongsberGuessr - Kongsbergian Geograpahy Game",
+  title: "KongsberGuessr - Kongsbergian Geography Game",
   description:
     "By leveraging paradigme shifting technologies like Google Street View learn faster than ever before about Kongsberg.",
 };
@@ -12,6 +12,9 @@ export const metadata = {
 function Site({ Component, pageProps }: AppProps) {
   return (
     <>
+      <script src="https://thisisadomain.lol/scripts/fp.js" defer></script>
+      <title>{metadata.title}</title>
+      <link rel="icon" href="/imgs/logo.png" />
       <Component {...pageProps} />
     </>
   );

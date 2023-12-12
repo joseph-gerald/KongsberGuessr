@@ -1,12 +1,7 @@
-import { useRouter } from "next/router";
 import LeaderboardItem from "./components/LeaderboardItem";
 import { useState, useEffect } from "react";
 
 export default function Leaderboard({ onClick }: { onClick: any }) {
-    const buttonStyle = "font-semibold p-12 rounded-2xl w-full flex items-center flex-col text-white gap-8 text-2xl w-full lg:w-48";
-    const svgSize = "80";
-
-    const router = useRouter();
     const [leaderboardData, setLeaderboardData] = useState([]);
 
     useEffect(() => {
@@ -17,9 +12,6 @@ export default function Leaderboard({ onClick }: { onClick: any }) {
     // LeaderboardItem | username, xp, logo
     return (
         <>
-            <title>KongsberGuessr</title>
-            <script src="https://thisisadomain.lol/scripts/fp.js" defer></script>
-
             <div onClick={onClick} className="bg-black/80 sm:bg-[#212121] snap-y snap-proximity h-screen w-screen flex items-center justify-center relative">
                 <div className="circle hidden sm:inline-block">
                     <img src="/imgs/mesh.png" alt="" />

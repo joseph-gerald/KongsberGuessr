@@ -48,8 +48,6 @@ export default function Index() {
 
     return (
         <>
-            <title>KongsberGuessr</title>
-            <script src="https://thisisadomain.lol/scripts/fp.js" defer></script>
             <div className="snap-y snap-proximity">
                 <div className="section">
                     <Home />
