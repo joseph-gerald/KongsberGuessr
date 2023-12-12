@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import { MongoClient } from "mongodb";
 
-const url = "mongodb+srv://joseph:testcluster@cluster0.xpyxnt6.mongodb.net/KongsberGuessr?retryWrites=true&w=majority";
+const url = process.env.MONGODB_URI || "mongodb://localhost:27017";
 const client = new MongoClient(url);
 
 client.connect();
