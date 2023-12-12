@@ -26,10 +26,9 @@ function calculateArea(latMin: number, latMax: number, lngMin: number, lngMax: n
     return (latMax - latMin) * (lngMax - lngMin);
 }
 
-function isValidStreetView(lat: number, lng: number) {
+function getStreetView(lat: number, lng: number) {
     return fetch(`https://maps.googleapis.com/maps/api/streetview/metadata?key=${apiKey}&location=${lat},${lng}`)
-        .then(res => res.json())
-        .then(data => data.status == "OK");
+        .then(res => res.json());
 }
 
 // in stackoverflow we trust
@@ -74,14 +73,16 @@ async function getRandomPlace(): Promise<{ lat: number, lng: number, address: st
         return await getRandomPlace();
     }
 
-    if (!await isValidStreetView(lat, lng)) {
+    const streetView = await getStreetView(lat, lng);
+
+    if (!streetView.status || streetView.status !== "OK") {
         console.log("not a valid street view, retrying");
         return await getRandomPlace();
     }
 
     return {
-        lat: lat,
-        lng: lng,
+        lat: streetView.location.lat,
+        lng: streetView.location.lng,
         address: data.display_name
     }
 }
