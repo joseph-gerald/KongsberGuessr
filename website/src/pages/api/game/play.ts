@@ -4,19 +4,25 @@ import client from '../_db';
 import game_utils from '../../../../utils/game_utils';
 import User from '../../../../models/User';
 import tracking_utils from '../../../../utils/tracking_utils';
+import Guess from '../../../../models/Guess';
+import Game from '../../../../models/Game';
 
-client.db("KongsberGuessr").collection("users");
+client.db("KongsberGuessr").collection("games");
+client.db("KongsberGuessr").collection("guesses");
 
-class Game {
+class GuessrGame {
     token: string;
     rounds: any[] = [];
     id: string = crypto_utils.sha1(crypto_utils.generateToken()).slice(0, 3);
+
+    db: any;
+
     constructor(token: string) {
         this.token = token;
     }
 }
 
-class PvPGame extends Game {
+class PvPGame extends GuessrGame {
     started: boolean = false;
     players: any = {};
     rounds: any = {};
@@ -28,7 +34,7 @@ class PvPGame extends Game {
     }
 }
 
-let games: { [id: string]: Game; } = {};
+let games: { [id: string]: GuessrGame; } = {};
 
 async function getRandomPlace() {
     return await game_utils.getValidPlace(5)
@@ -37,7 +43,7 @@ async function getRandomPlace() {
 export default async function validate(req: NextApiRequest, res: NextApiResponse) {
     const data = await tracking_utils.validateData(req, res);
     if (typeof data == "string") return;
-    const { user, token } = data;
+    const { user, token, session } = data;
 
     let game = games[token];
     let mode = req.body.mode;
@@ -49,7 +55,17 @@ export default async function validate(req: NextApiRequest, res: NextApiResponse
     if (mode) {
         switch (mode) {
             case "solo":
-                game = games[token] = new Game(token);
+                game = games[token] = new GuessrGame(token);
+
+                game.db = await Game.create({
+                    creator: user._id,
+                    session: session,
+                    game_id: game.id,
+                    timestamp: Date.now(),
+                    mode: "pvp",
+                    settings: {},
+                });
+
                 res.send({ id: game.id });
                 return;
             case "pvp":
@@ -115,6 +131,15 @@ export default async function validate(req: NextApiRequest, res: NextApiResponse
                     if (isHost && settings) {
                         gameFound.public.settings = settings;
                     }
+
+                    gameFound.db = await Game.create({
+                        creator: user._id,
+                        session: session,
+                        game_id: gameFound.id,
+                        timestamp: Date.now(),
+                        mode: "pvp",
+                        settings: gameFound.public.settings,
+                    })
 
                     res.json(gameFound.public);
                 } else {
@@ -336,6 +361,25 @@ export default async function validate(req: NextApiRequest, res: NextApiResponse
             rnd.score = Math.round(game_utils.calculateScore(rnd));
 
             User.findOneAndUpdate({ _id: user._id }, { xp: user.xp + rnd.score }).exec();
+            
+            Guess.create({
+                user: user._id,
+                game: game.db._id,
+
+                round: round,
+
+                start_time: rnd.started,
+                time_taken: rnd.time_taken,
+
+                score: rnd.score,
+                distance: rnd.distance,
+
+                answer_lat: rnd.location.lat,
+                answer_lng: rnd.location.lng,
+
+                guess_lat: rnd.guess.lat,
+                guess_lng: rnd.guess.lng,
+            })
 
             res.json({ data: rnd });
             return;

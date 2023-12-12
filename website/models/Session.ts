@@ -6,11 +6,13 @@ var Schema = mongoose.Schema,
 const scheme = mongoose.Schema({
     user: {
         type: ObjectId,
+        ref: 'User',
         required: [true, 'User is required']
     },
 
     fingerprint: {
         type: ObjectId,
+        ref: 'Fingerprint',
         required: [true, 'Fingerprint is required']
     },
 
