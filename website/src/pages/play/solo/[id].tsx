@@ -128,7 +128,7 @@ export default function Index() {
                 setGameOver(true)
                 return;
             default:
-                setOverlayText("Error loading game");
+                setOverlayText("ERROR " + res.status);
                 returnHome();
                 return;
         }
