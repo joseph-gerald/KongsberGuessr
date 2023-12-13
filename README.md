@@ -119,10 +119,10 @@ npm run dev
 NEXT_PUBLIC_ORIGIN="https://kbg.jooo.tech"
 
 // public google api key ( restrictions: http refererer [e.g *.jooo.tech/*], apis [maps embed/javascript and streetview] )
-NEXT_PUBLIC_API_KEY=""
+NEXT_PUBLIC_GOOGLE_API_KEY=""
 
 // private google api key ( restrictions: ip and geocoding api )
-PRIVATE_API_KEY=""
+PRIVATE_GOOGLE_API_KEY=""
 
 // mongoDB URI
 MONGODB_URI=""
