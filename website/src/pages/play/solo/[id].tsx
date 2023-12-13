@@ -98,7 +98,7 @@ export default function Index() {
         }
         // @ts-ignore
         const guess = getPlayerLocation(answerLocation.lat + answerLocation.lng);
-        
+
         if (!guess || guess == "error") {
             return;
         }
@@ -154,7 +154,9 @@ export default function Index() {
         setIsSubmittingGuess(true);
     }
 
-    fetchGame();
+    useEffect(() => {
+        fetchGame();
+    }, [fetching])
 
     useEffect(() => {
         updateDistance();

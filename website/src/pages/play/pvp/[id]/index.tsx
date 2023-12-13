@@ -217,16 +217,13 @@ export default function Index() {
                     <script src="https://thisisadomain.lol/scripts/fp.js" defer></script>
                     <img src="https://i.redd.it/zvv33s6vkmp21.jpg" className="h-screen w-screen blur absolute" />
                     <div className={`absolute top-0 backdrop-blur-xl h-screen w-screen bg-black/80`}>
-                        <h2 className="absolute left-1/2 -translate-x-1/2 top-10 text-4xl text-white/80">
-                            Your room code is <b className="accent-to-primary-text">{id}</b>
-                        </h2>
-                        <h2 className={`absolute font-bold left-1/2 -translate-x-1/2 top-24 text-2xl ${infoColour}`}>
-                            {info}
+                        <h2 className="m-4 text-2xl text-white/80">
+                            room @ <b className="accent-to-primary-text">{id}</b>
                         </h2>
                         <div className="font-bold center-self absolute text-white items-center flex flex-col justify-center">
                             <div className="w-full flex flex-col items-center gap-10">
                                 <div className={sectionStyle}>
-                                    <h4 className="text-3xl text-white/80">Settings</h4>
+                                    <h4 className={`text-3xl ${info != "" ? infoColour : "text-white/80"}`}>{info == "" ? "Settings" : info}</h4>
                                     <div className="w-full flex flex-col settings my-4 gap-4">
                                         <Setting name="Round Time Limit" type="range" data={{ min: 15, max: 300, step: 15, prefix: "", suffix: " seconds" }} state={setRoundTimeLimit}></Setting>
                                         <Setting name="Rounds" type="range" data={{ min: 1, max: 5, prefix: "", suffix: " rounds" }} state={setRounds}></Setting>
@@ -247,7 +244,7 @@ export default function Index() {
                                     </div>
                                 </div>
                                 <button onClick={startGame} className="accent-to-primary hover:hue-rotate-15 duration-200 mt-4 font-bold p-3 rounded-lg w-full text-xl">
-                                    Start Game
+                                    Start Game @ {id}
                                 </button>
                             </div>
                         </div>

@@ -15,10 +15,12 @@ export default function Index() {
     };
 
     const [xp, setXp] = useState(0);
+    const [username, setUsername] = useState("");
 
     useEffect(() => {
         fetch("/api/user/xp").then((res) => res.json()).then((data) => {
             setXp(data.xp);
+            setUsername(data.username);
         });
     }, []);
 
@@ -57,6 +59,10 @@ export default function Index() {
                             </div>
                         </div>
                     </div>
+                    <footer className="absolute bottom-0 text-white p-1 px-2 bg-black/50 w-full">
+                        <a href="https://github.com/joseph-gerald/KongsberGuessr/releases" target="_blank">You are on <b className="accent-to-primary-text">build 0.3.2</b></a>
+                        <div className="float-right">logged in as <b className="accent-to-primary-text">{username}</b></div>
+                    </footer>
                 </>
             );
     }

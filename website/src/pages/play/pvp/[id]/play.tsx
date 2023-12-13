@@ -389,13 +389,13 @@ export default function Index() {
                             </h1>
                             <hr className="border w-96 m-2 mb-6" />
                             <h2>
-                                You guessed {roundData.guess.address}
+                                {roundData.guess.address ? `You guessed ${roundData.guess.address}` : "You didn't guess in time!"}
                             </h2>
                             <h2>
                                 It was actually {roundData.location.address}
                             </h2>
                             <h2>
-                                You were off by {roundData.distance} meters
+                                {roundData.guess.address ? `You were off by ${roundData.distance} meters` : ""}
                             </h2>
                             <h2>
                                 You used {(roundData.time_taken / 1000).toFixed(2)} seconds

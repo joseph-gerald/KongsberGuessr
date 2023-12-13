@@ -9,5 +9,5 @@ export default async function validate(req: NextApiRequest, res: NextApiResponse
     if (typeof data == "string") return;
     const { user } = data;
 
-    res.json({ xp: user.xp });
+    res.json({ xp: user.xp, username: user.username });
 }

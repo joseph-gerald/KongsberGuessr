@@ -24,7 +24,8 @@ export default function Select() {
                 router.push(`/play/${mode}/${data.id}`);
                 break;
             default:
-                alert(res.status + "\n" + res.statusText)
+                location.reload();
+                //alert(res.status + "\n" + res.statusText)
         }
     }
 
