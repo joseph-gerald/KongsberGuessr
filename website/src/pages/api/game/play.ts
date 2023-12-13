@@ -382,7 +382,7 @@ export default async function validate(req: NextApiRequest, res: NextApiResponse
             rnd.time_taken = rnd.finished - rnd.started;
             rnd.distance = Math.round(game_utils.calculateDistance(answer.lat, answer.lng, guess.lat, guess.lng));
 
-            rnd.score = Math.round(game_utils.calculateScore(rnd));
+            rnd.score = Math.ceil(game_utils.calculateScore(rnd));
 
             User.findOneAndUpdate({ _id: user._id }, { xp: user.xp + rnd.score }).exec();
 
