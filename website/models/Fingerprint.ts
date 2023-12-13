@@ -9,6 +9,8 @@ const scheme = mongoose.Schema({
         type: String,
         required: [true, 'Data is required']
     },
+}, {
+    timestamps: true
 })
 
 let Fingerprint;

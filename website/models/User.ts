@@ -21,6 +21,8 @@ const scheme = mongoose.Schema({
         type: Number,
         default: 0,
     },
+}, {
+    timestamps: true
 })
 
 let User;

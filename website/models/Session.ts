@@ -25,6 +25,8 @@ const scheme = mongoose.Schema({
         type: String,
         required: [true, 'IP Address is required']
     },
+}, {
+    timestamps: true
 })
 
 let Session;

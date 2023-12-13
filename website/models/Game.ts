@@ -34,6 +34,8 @@ const scheme = Schema({
     settings: {
         type: Object,
     },
+}, {
+    timestamps: true
 })
 
 let Game;

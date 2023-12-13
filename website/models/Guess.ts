@@ -65,6 +65,8 @@ const scheme = Schema({
         type: Number,
         required: [true, 'Guess longitude is required']
     },
+}, {
+    timestamps: true
 })
 
 let Guess;
