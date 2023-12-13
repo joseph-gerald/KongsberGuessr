@@ -17,7 +17,7 @@ export default async function validate(req: NextApiRequest, res: NextApiResponse
     const guesses = await Guess.find({ user: user._id }).sort({ createdAt: -1 }).limit(5);
 
     let accuracy = guesses.reduce((acc: number, guess: any) => acc + guess.distance, 0) / guesses.length;
-    let score = guesses.reduce((acc: number, guess: any) => acc + guess.score, 0) / guesses.length;
+    let score = Math.round(guesses.reduce((acc: number, guess: any) => acc + guess.score, 0) / guesses.length);
     let time = Math.round(guesses.reduce((acc: number, guess: any) => acc + guess.time_taken, 0) / guesses.length / 1000);
     
     // get all players and calculate average accuracy, score and time
@@ -43,8 +43,8 @@ export default async function validate(req: NextApiRequest, res: NextApiResponse
     }
 
     let globalAccuracy = globalData.reduce((acc: number, data: any) => acc + data.accuracy, 0) / globalData.length;
-    const globalScore =  globalData.reduce((acc: number, data: any) => acc + data.score, 0) / globalData.length;
-    const globalTime =  Math.round(globalData.reduce((acc: number, data: any) => acc + data.time, 0) / globalData.length / 1000);
+    const globalScore =  Math.round(globalData.reduce((acc: number, data: any) => acc + data.score, 0) / globalData.length);
+    const globalTime =   Math.round(globalData.reduce((acc: number, data: any) => acc + data.time, 0) / globalData.length / 1000);
 
     accuracy = Math.ceil((1000 - accuracy) / 10);
     globalAccuracy = Math.ceil((1000 - globalAccuracy) / 10);
