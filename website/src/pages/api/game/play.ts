@@ -61,7 +61,6 @@ export default async function validate(req: NextApiRequest, res: NextApiResponse
                     creator: user._id,
                     session: session,
                     game_id: game.id,
-                    timestamp: Date.now(),
                     mode: "solo",
                     settings: {},
                 });
@@ -136,7 +135,6 @@ export default async function validate(req: NextApiRequest, res: NextApiResponse
                         creator: user._id,
                         session: session,
                         game_id: gameFound.id,
-                        timestamp: Date.now(),
                         mode: "pvp",
                         settings: gameFound.public.settings,
                     })

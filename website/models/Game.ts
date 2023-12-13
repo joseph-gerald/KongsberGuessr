@@ -21,11 +21,6 @@ const scheme = Schema({
         required: [true, 'Game id is required']
     },
 
-    timestamp: {
-        type: Date,
-        required: [true, 'Timestamp is required']
-    },
-
     mode: {
         type: String,
         required: [true, 'Mode is required']
