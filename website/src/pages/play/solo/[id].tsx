@@ -93,19 +93,28 @@ export default function Index() {
 
     const updateDistance = () => {
         // @ts-ignore
+        if (typeof getPlayerLocation == "undefined") {
+            return;
+        }
+        // @ts-ignore
         const guess = getPlayerLocation(answerLocation.lat + answerLocation.lng);
-        console.log(guess)
-        if (!guess || guess == "error") return;
+        
+        if (!guess || guess == "error") {
+            return;
+        }
 
         const distance = Math.round(game_utils.calculateDistance(guess.lat, guess.lng, answerLocation.lat, answerLocation.lng));
         setDistance(distance);
+
+        setTimeout(updateDistance, 100);
     }
 
-    useEffect(() => {
-        setInterval(updateDistance, 1000);
-    }, [])
-
     async function fetchGame() {
+        // @ts-ignore
+        if (typeof setLocation == "undefined") {
+            setTimeout(fetchGame, 100);
+            return;
+        }
         if (!fetching) return;
         const res = await fetch(game_utils.origin + '/api/game/play', {
             method: 'POST',
@@ -146,6 +155,10 @@ export default function Index() {
     }
 
     fetchGame();
+
+    useEffect(() => {
+        updateDistance();
+    }, [answerLocation]);
 
     return (
         <>

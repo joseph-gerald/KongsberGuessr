@@ -34,6 +34,7 @@ export default function Setting({ name, type, data, state }: { name: string, typ
                             value={rangeValue}
                             min={data.min}
                             max={data.max}
+                            step={data.step}
                             onChange={event => handleRangeChange(event)}
                         />
                     </>

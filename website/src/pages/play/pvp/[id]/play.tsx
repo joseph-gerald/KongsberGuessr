@@ -5,6 +5,23 @@ import game_utils from '../../../../../utils/game_utils';
 import { set } from "mongoose";
 
 export default function Index() {
+    function calculateTimeDifference(time: number) {
+        if (time < Date.now()) return "-00:00";
+
+        const difference = time - Date.now();
+
+        const totalSeconds = Math.floor(difference / 1000);
+
+        const minutes = Math.floor(totalSeconds / 60);
+        const seconds = totalSeconds % 60;
+
+        const formattedMinutes = String(minutes).padStart(2, '0');
+        const formattedSeconds = String(seconds).padStart(2, '0');
+
+        return `${formattedMinutes}:${formattedSeconds}`;
+    }
+
+
     const router = useRouter();
     const { id } = router.query;
     const [overlayText, setOverlayText] = useState("Fetching Challenge...");
@@ -23,7 +40,8 @@ export default function Index() {
         lat: 59.9139,
         lng: 10.7522,
         isHost: false,
-        max_rounds: 0,
+        rounds: 0,
+        roundTimeLimit: 0,
     };
 
     const mapStyle = "absolute z-50 left-0 bottom-0 opacity-40 hover:opacity-100 m-4 rounded-xl overflow-hidden duration-300 ";
@@ -32,16 +50,30 @@ export default function Index() {
 
     ]);
 
+    const [ticking, setTicking] = useState(true);
+    const [count, setCount] = useState(0);
+
+
     const [round, setRound] = useState(1);
     const [distance, setDistance] = useState(0);
     const [maxRounds, setMaxRounds] = useState(0);
+    const [currentScore, setCurrentScore] = useState(0);
+
+    const [timeRemainingString, setTimeRemainingString] = useState("");
+    const [roundStartTime, setRoundStartTime] = useState(0);
+    const [roundDuration, setRoundDuration] = useState(0);
+
     const [gameOver, setGameOver] = useState(false);
     const [toUpdate, setToUpdate] = useState(false);
     const [fetching, setFetching] = useState(true);
+
     const [isOverlayVisible, setIsOverlayVisible] = useState(true);
     const [isSubmittingGuess, setIsSubmittingGuess] = useState(true);
+
     const [isHost, setIsHost] = useState(false);
-    const [mapConditional, setMapConditional] = useState("w-[calc(15vw+5vh)] h-[calc(5vw+10vh)] hover:w-[35vw] hover:h-[calc(15vw+20vh)] hover:left");
+
+    const [mapConditional] = useState("w-[calc(15vw+5vh)] h-[calc(5vw+10vh)] hover:w-[35vw] hover:h-[calc(15vw+20vh)] hover:left");
+
     const [roundData, setRoundData] = useState({
         score: 0,
         guess: {
@@ -61,6 +93,9 @@ export default function Index() {
     // fetch game data with id
 
     const handleSubmit = async () => {
+
+        if (gameOver) return returnHome();
+
         setOverlayText("Submitting Guess...");
         setIsOverlayVisible(true);
 
@@ -85,6 +120,7 @@ export default function Index() {
         const data = await res.json();
 
         setRoundData(data.data);
+        setCurrentScore(currentScore + data.data.score);
         setIsSubmittingGuess(false);
     };
 
@@ -146,22 +182,47 @@ export default function Index() {
         setToUpdate(false)
     }
 
-    const updateDistance = () => {
-        // @ts-ignore
-        const guess = getPlayerLocation(answerLocation.lat + answerLocation.lng);
-        console.log(guess)
-        if (!guess || guess == "error") return;
+    const updateTimer = (roundStartTime: number) => {
+        const timeRemainingString = calculateTimeDifference(roundStartTime + roundDuration);
 
-        const distance = Math.round(game_utils.calculateDistance(guess.lat, guess.lng, answerLocation.lat, answerLocation.lng));
-        setDistance(distance);
+        setTimeRemainingString(timeRemainingString);
+
+        if (timeRemainingString == "-00:00") {
+            if (isOverlayVisible || !isSubmittingGuess || toUpdate) return;
+            handleSubmit();
+            return;
+        }
     }
 
     useEffect(() => {
-        performUpdate();
-        setInterval(updateDistance, 1000);
-    }, [])
+        const timer = setTimeout(() => ticking && updateTimer(roundStartTime), 1e3)
+        return () => clearTimeout(timer)
+    }, [count, ticking, timeRemainingString])
+
+    const updateDistance = () => {
+        // @ts-ignore
+        if (typeof getPlayerLocation == "undefined") {
+            return;
+        }
+        // @ts-ignore
+        const guess = getPlayerLocation(answerLocation.lat + answerLocation.lng);
+
+        if (!guess || guess == "error") {
+            return;
+        }
+
+        const distance = Math.round(game_utils.calculateDistance(guess.lat, guess.lng, answerLocation.lat, answerLocation.lng));
+        setDistance(distance);
+
+        setTimeout(updateDistance, 100);
+    }
 
     async function fetchGame() {
+        // @ts-ignore
+        if (typeof setLocation == "undefined") {
+            setTimeout(fetchGame, 100);
+            return;
+        }
         if (!fetching) return;
         const res = await fetch(game_utils.origin + '/api/game/play', {
             method: 'POST',
@@ -202,21 +263,29 @@ export default function Index() {
         setIsSubmittingGuess(true);
 
         setIsHost(location.isHost);
-        setMaxRounds(location.max_rounds);
+        setMaxRounds(location.rounds);
+        setRoundDuration(location.roundTimeLimit * 1000);
+
+        setRoundStartTime(Date.now());
+        updateTimer(Date.now());
     }
 
     useEffect(() => {
         fetchGame();
     }, [fetching])
 
+    useEffect(() => {
+        updateDistance();
+    }, [answerLocation]);
+
     return (
         <>
             <title>PvP</title>
-            <h1 className="text-white absolute z-50 text-4xl font-bold m-2 p-2 drop-shadow-2xl bg-black/30 backdrop-blur-md">
-                round {round}/{maxRounds}
+            <h1 className="text-white absolute z-50 text-xl m-2 p-1 drop-shadow-2xl bg-black/40 backdrop-blur-md">
+                {currentScore} points / {timeRemainingString} left / {distance}m from start
             </h1>
-            <h1 className="text-white absolute top-16 z-50 text-xl m-2 p-1 drop-shadow-2xl bg-black/30 backdrop-blur-md">
-                {distance}m from start
+            <h1 className="text-white absolute z-50 top-10 text-2xl font-bold m-2 p-1.5 drop-shadow-2xl bg-black/40 backdrop-blur-md">
+                round {round}/{maxRounds}
             </h1>
             <div className="bg-black/80 sm:bg-[#212121] snap-y snap-proximity h-screen w-screen flex items-center justify-center relative">
                 <StreetView lat={location.lat} lng={location.lng} />
@@ -299,7 +368,7 @@ export default function Index() {
                                                                 </h4>
                                                                 |
                                                                 <h4>
-                                                                    {player.totalScore / player.roundsPlayed}
+                                                                    {Math.round(player.totalScore / player.roundsPlayed)}
                                                                 </h4>
                                                             </div>
                                                         )

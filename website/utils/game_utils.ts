@@ -1,6 +1,6 @@
 const origin: string = process.env.NEXT_PUBLIC_ORIGIN as string;
-const apiKey: string = process.env.NEXT_PUBLIC_API_KEY as string;
-const privateApiKey: string = process.env.PRIVATE_API_KEY as string;
+const apiKey: string = process.env.NEXT_PUBLIC_GOOGLE_API_KEY as string;
+const privateApiKey: string = process.env.PRIVATE_GOOGLE_API_KEY as string;
 
 const locations: Promise<{ lat: number, lng: number, address: string }>[] = [];
 const max_rounds = 5;

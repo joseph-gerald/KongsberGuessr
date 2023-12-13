@@ -14,7 +14,7 @@ export default function Index() {
     const [infoColour, setInfoColour] = useState("text-red-600");
     const [players, setPlayers] = useState([] as any[]);
 
-    const [roundTimeLimit, setRoundTimeLimit] = useState(1);
+    const [roundTimeLimit, setRoundTimeLimit] = useState(15);
     const [rounds, setRounds] = useState(1);
     const [challenges, setChallenges] = useState("Everyone Different");
     const [started, setStarted] = useState(false);
@@ -228,7 +228,7 @@ export default function Index() {
                                 <div className={sectionStyle}>
                                     <h4 className="text-3xl text-white/80">Settings</h4>
                                     <div className="w-full flex flex-col settings my-4 gap-4">
-                                        <Setting name="Round Time Limit" type="range" data={{ min: 1, max: 5, prefix: "", suffix: " minutes" }} state={setRoundTimeLimit}></Setting>
+                                        <Setting name="Round Time Limit" type="range" data={{ min: 15, max: 300, step: 15, prefix: "", suffix: " seconds" }} state={setRoundTimeLimit}></Setting>
                                         <Setting name="Rounds" type="range" data={{ min: 1, max: 5, prefix: "", suffix: " rounds" }} state={setRounds}></Setting>
                                         <Setting name="Challenges" type="boolean" data={{ true: "Everyone Same", false: "Everyone Different" }} state={setChallenges}></Setting>
                                     </div>
@@ -273,8 +273,8 @@ export default function Index() {
                                             [roundTimeLimit, rounds, challenges].map((setting, index) => {
                                                 return (
                                                     <>
-                                                        <h3 className="text-xl accent-to-primary-text">{["Round Time Limit", "Rounds", "Challenges"][index]}</h3>
-                                                        <h4 className="text-xl text-white/60">{setting}</h4>
+                                                        <h3 key={"setting-" + index} className="text-xl accent-to-primary-text">{["Round Time Limit", "Rounds", "Challenges"][index]}</h3>
+                                                        <h4 key={"value-" + index} className="text-xl text-white/60">{setting}</h4>
                                                     </>
                                                 )
                                             })
