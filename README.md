@@ -13,12 +13,14 @@ Learn and become more familiar with Kongsberg in a fun and intuitive way!
 <br>
 
 ## Features ✨
-- Accounts
-- Levels, Experience
-- Leaderboard
-- Geography Game
-- Fun
-- Multiplayer (rough)
+- [x] Fun
+- [x] Accounts
+- [x] Leaderboard
+- [x] Levels, Experience
+- [x] Geography Game
+- [x] Multiplayer (rough)
+- [x] Fast
+- [ ] Responsive (the pages are responsive, game isnt)
 
 ## Screenshots
 
