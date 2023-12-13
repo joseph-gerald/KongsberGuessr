@@ -62,7 +62,7 @@ export default async function validate(req: NextApiRequest, res: NextApiResponse
                     session: session,
                     game_id: game.id,
                     timestamp: Date.now(),
-                    mode: "pvp",
+                    mode: "solo",
                     settings: {},
                 });
 
@@ -107,7 +107,7 @@ export default async function validate(req: NextApiRequest, res: NextApiResponse
             pvpGame.players[token] = user.username;
             pvpGame.public.players.push({ id: String(user._id).slice(0, 6), username: user.username, xp: user.xp });
             pvpGame.public.started = false;
-
+            
             res.send({ id: game.id });
             break;
         case "update":
@@ -224,7 +224,16 @@ export default async function validate(req: NextApiRequest, res: NextApiResponse
                     }
 
                     game.public.started = true;
-
+         
+                    game.db = await Game.create({
+                        creator: user._id,
+                        session: session,
+                        game_id: game.id,
+                        timestamp: Date.now(),
+                        mode: "pvp",
+                        settings: game.public.settings,
+                    });
+        
                     res.json({ status: "ok" });
                 } else {
                     const currentRound = game.public.rounds.length;
@@ -346,9 +355,11 @@ export default async function validate(req: NextApiRequest, res: NextApiResponse
             }
 
             const isPvP = pvp;
-
+            let gameId = game.db._id;
+            
             if (isPvP && gameFound != null && gameFound instanceof PvPGame) {
                 rnd = gameFound.rounds[token][round];
+                gameId = gameFound.db._id;
             }
 
             const answer = rnd.location;
@@ -364,7 +375,7 @@ export default async function validate(req: NextApiRequest, res: NextApiResponse
             
             Guess.create({
                 user: user._id,
-                game: game.db._id,
+                game: gameId,
 
                 round: round,
 
