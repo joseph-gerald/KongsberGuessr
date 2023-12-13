@@ -356,7 +356,7 @@ export default function Index() {
                                                         return (
                                                             <div key={index} className="flex justify-between w-full gap-3 font-light text-white/80">
                                                                 {
-                                                                    ["🥇", "🥈", "🥉"][index] ? ["🥇", "🥈", "🥉"][index] : index + 1
+                                                                    ["🥇", "🥈", "🥉"][index] ? ["🥇", "🥈", "🥉"][index] : index + 1 + " "
                                                                 }
                                                                 |
                                                                 <h4 className="accent-to-primary-text">

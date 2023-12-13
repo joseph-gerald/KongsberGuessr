@@ -85,8 +85,12 @@ export default function Index() {
         });
 
         if (res.status != 200) {
-            setInfoColour("text-red-600");
+            setInfoColour("text-red-800");
             setInfo((await res.json()).error)
+            setTimeout(() => {
+                setInfoColour("");
+                setInfo("");
+            }, 1500);
             return;
         }
 

@@ -12,11 +12,11 @@ export default function GameStat({ score, time, accuracy, descriptor }: { score:
                     </div>
                     <div className="flex flex-col text-white items-center">
                         <b>Time</b>
-                        <b>{time}</b>
+                        <b>{time}s</b>
                     </div>
-                    <div className="flex flex-col text-white items-center">
+                    <div title={`${(1 - accuracy * 0.01).toFixed(1)} km off`} className="flex flex-col text-white items-center">
                         <b>Accuracy</b>
-                        <b>{accuracy}</b>
+                        <b>{accuracy}%</b>
                     </div>
                 </div>
             </div>

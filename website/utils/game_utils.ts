@@ -5,7 +5,7 @@ const privateApiKey: string = process.env.PRIVATE_GOOGLE_API_KEY as string;
 const locations: Promise<{ lat: number, lng: number, address: string }>[] = [];
 const max_rounds = 5;
 const minimum_backlog = 20;
-const version = "0.3.1";
+const build = "0.3.1";
 
 const places = {
     Kongsberg: {
@@ -123,4 +123,4 @@ async function getValidPlace(size: number): Promise<{ lat: number, lng: number, 
     return await Promise.race(promises);
 }
 
-export default { getValidPlace, getRandomPlace, calculateDistance, getGeoData, calculateScore, origin, apiKey, max_rounds, boundings };
+export default { getValidPlace, getRandomPlace, calculateDistance, getGeoData, calculateScore, origin, apiKey, max_rounds, boundings, build };
