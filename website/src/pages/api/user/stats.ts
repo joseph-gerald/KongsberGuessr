@@ -33,6 +33,8 @@ export default async function validate(req: NextApiRequest, res: NextApiResponse
         const score = guesses.reduce((acc: number, guess: any) => acc + guess.score, 0) / guesses.length;
         const time = guesses.reduce((acc: number, guess: any) => acc + guess.time_taken, 0) / guesses.length;
 
+        if (isNaN(accuracy) || isNaN(score) || isNaN(time)) continue;
+
         globalData.push({
             accuracy,
             score,
