@@ -72,7 +72,7 @@ Learn and become more familiar with Kongsberg in a fun and intuitive way!
 | ------------- |
 | ![image](https://github.com/joseph-gerald/KongsberGuessr/assets/73967013/1f20874a-4a46-4e6b-9e39-66e350773789) |
 
-| Leaderboard |
+| Join Room |
 | ------------- |
 | ![image](https://github.com/joseph-gerald/KongsberGuessr/assets/73967013/b788fac0-05c5-4010-81fb-da8aef682022) |
 
