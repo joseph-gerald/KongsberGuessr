@@ -5,7 +5,7 @@ const privateApiKey: string = process.env.PRIVATE_GOOGLE_API_KEY as string;
 const locations: Promise<{ lat: number, lng: number, address: string }>[] = [];
 const max_rounds = 5;
 const minimum_backlog = 20;
-const build = "0.3.1";
+const build = "0.4.0";
 
 const places = {
     Kongsberg: {
