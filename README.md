@@ -48,15 +48,15 @@ Learn and become more familiar with Kongsberg in a fun and intuitive way!
 #### Home/Dashboard "/" logged in
 | Landing | Play/Selection | Leaderboard |
 | ------------- | ------------- | ------------- |
-| ![image](https://github.com/joseph-gerald/KongsberGuessr/assets/73967013/d9aa703a-a800-4745-be2c-778e29025df8) | ![image](https://github.com/joseph-gerald/KongsberGuessr/assets/73967013/88779889-acd4-4307-8205-6c44e6813643) | ![image](https://github.com/joseph-gerald/KongsberGuessr/assets/73967013/404f19fb-aeae-483a-98c4-feeacf43fa5b) |
+| ![image](https://github.com/joseph-gerald/KongsberGuessr/assets/73967013/93a730b0-8add-4f67-98eb-76fc30f0ceba) | ![image](https://github.com/joseph-gerald/KongsberGuessr/assets/73967013/a3d7be0c-869f-4458-9b08-31fde9beec49) | ![image](https://github.com/joseph-gerald/KongsberGuessr/assets/73967013/404f19fb-aeae-483a-98c4-feeacf43fa5b) |
 
 | Landing |
 | ------------- |
-| ![image](https://github.com/joseph-gerald/KongsberGuessr/assets/73967013/d9aa703a-a800-4745-be2c-778e29025df8) |
+| ![image](https://github.com/joseph-gerald/KongsberGuessr/assets/73967013/28df57d3-a73e-4fa6-bf6e-896b45f2c1d6) |
 
 | Play/Selection |
 | ------------- |
-| ![image](https://github.com/joseph-gerald/KongsberGuessr/assets/73967013/88779889-acd4-4307-8205-6c44e6813643) |
+| ![image](https://github.com/joseph-gerald/KongsberGuessr/assets/73967013/7c439748-ce39-44f0-828c-f6de149081c9) |
 
 | Leaderboard |
 | ------------- |
@@ -70,7 +70,7 @@ Learn and become more familiar with Kongsberg in a fun and intuitive way!
 
 | Room Creator |
 | ------------- |
-| ![image](https://github.com/joseph-gerald/KongsberGuessr/assets/73967013/80cf2188-9b9f-4398-a569-f2b060a1bf33) |
+| ![image](https://github.com/joseph-gerald/KongsberGuessr/assets/73967013/1f20874a-4a46-4e6b-9e39-66e350773789) |
 
 | Leaderboard |
 | ------------- |
