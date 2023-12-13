@@ -355,7 +355,7 @@ export default async function validate(req: NextApiRequest, res: NextApiResponse
             }
 
             const isPvP = pvp;
-            let gameId = game.db?._id;
+            let gameId = game?.db._id;
             
             if (isPvP && gameFound != null && gameFound instanceof PvPGame) {
                 rnd = gameFound.rounds[token][round];
