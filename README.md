@@ -20,7 +20,7 @@ Learn and become more familiar with Kongsberg in a fun and intuitive way!
 - [x] Geography Game
 - [x] Multiplayer (rough)
 - [x] Fast
-- [ ] Responsive (the pages are responsive, game isnt)
+- [x] Responsive
 
 ## Screenshots
 
