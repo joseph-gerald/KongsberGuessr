@@ -40,13 +40,13 @@ async function process(hash: string, data: string, useragent: string) {
     const untampered = latestSource.includes(data_object.SCRIPT);
 
     // See if the useragent is the same
-    const sameUseragent = useragent == data_object.USERAGENT;
+    const sameUseragent = useragent == data_object.USERAGENT; 
 
-    console.log({
+    /*console.log({
         integrity,
         untampered,
         sameUseragent
-    })
+    })*/
 
     // Verdict from both checks
     const passed = integrity && untampered && sameUseragent;

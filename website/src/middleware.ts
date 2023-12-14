@@ -3,6 +3,7 @@ import game_utils from '../utils/game_utils';
 
 export async function middleware(req: NextRequest, res: NextResponse) {
     const cookies = req.headers.get('cookie');
+    const useragent = req.headers.get('user-agent');
     const token = cookies?.split(';').find((c: string) => c.trim().startsWith('token='))?.split('=')[1];
     const ip_address = req.headers.get('cf-connecting-ip');
     const url = req.nextUrl.clone();
@@ -12,7 +13,7 @@ export async function middleware(req: NextRequest, res: NextResponse) {
     if (token) {
         const response = await fetch(game_utils.origin + '/api/auth/validate', {
             method: 'POST',
-            body: JSON.stringify({ token, ip_address }),
+            body: JSON.stringify({ token, ip_address, useragent }),
             headers: {
                 'Content-Type': 'application/json',
             },

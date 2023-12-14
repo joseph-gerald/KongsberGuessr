@@ -75,7 +75,6 @@ export default function Index() {
                                             <GameStat score={personal.score} time={personal.time} accuracy={personal.accuracy} descriptor="Your last 5 Guesses" />
                                             <GameStat score={global.score} time={global.time} accuracy={global.accuracy} descriptor="Average last 5 Guesses" />
                                         </div>
-                                        <i className="absolute bottom-4 text-white/70 text-sm">*accuracy is the distance from max score, e.g 500m off = 50% and 2km off = -100%</i>
                                     </div>
                                 </div>
                             </div>
