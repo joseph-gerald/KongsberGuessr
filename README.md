@@ -22,6 +22,30 @@ Learn and become more familiar with Kongsberg in a fun and intuitive way!
 - [x] Fast
 - [x] Responsive
 
+## Setting up a Workspace
+```bash
+git clone https://github.com/joseph-gerald/KongsberGuessr.git
+cd website
+
+npm i
+npm run dev
+```
+
+.env.local
+```js
+// origin
+NEXT_PUBLIC_ORIGIN="https://kbg.jooo.tech"
+
+// public google api key ( restrictions: http refererer [e.g *.jooo.tech/*], apis [maps embed/javascript and streetview] )
+NEXT_PUBLIC_GOOGLE_API_KEY=""
+
+// private google api key ( restrictions: ip and geocoding api )
+PRIVATE_GOOGLE_API_KEY=""
+
+// mongoDB URI
+MONGODB_URI=""
+```
+
 ## Screenshots
 
 #### Landing "/" unlogged in
@@ -105,27 +129,3 @@ Learn and become more familiar with Kongsberg in a fun and intuitive way!
 | Game Over (PvP) |
 | --------------- |
 | ![image](https://github.com/joseph-gerald/KongsberGuessr/assets/73967013/4e743176-9995-4ef7-aac6-729dae3a80ec) |
-
-### Setting up a Workspace
-```bash
-git clone https://github.com/joseph-gerald/KongsberGuessr.git
-cd website
-
-npm i
-npm run dev
-```
-
-.env.local
-```js
-// origin
-NEXT_PUBLIC_ORIGIN="https://kbg.jooo.tech"
-
-// public google api key ( restrictions: http refererer [e.g *.jooo.tech/*], apis [maps embed/javascript and streetview] )
-NEXT_PUBLIC_GOOGLE_API_KEY=""
-
-// private google api key ( restrictions: ip and geocoding api )
-PRIVATE_GOOGLE_API_KEY=""
-
-// mongoDB URI
-MONGODB_URI=""
-```
