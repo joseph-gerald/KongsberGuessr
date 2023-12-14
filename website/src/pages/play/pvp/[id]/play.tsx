@@ -44,7 +44,7 @@ export default function Index() {
         roundTimeLimit: 0,
     };
 
-    const mapStyle = "absolute z-50 left-0 bottom-0 opacity-40 hover:opacity-100 m-4 rounded-xl overflow-hidden duration-300 ";
+    const mapStyle = "absolute z-50 left-0 bottom-0 hover:opacity-100 rounded-xl overflow-hidden duration-300 ";
 
     const [playersStatus, setPlayersStatus] = useState([
 
@@ -72,7 +72,8 @@ export default function Index() {
 
     const [isHost, setIsHost] = useState(false);
 
-    const [mapConditional] = useState("w-[calc(15vw+5vh)] h-[calc(5vw+10vh)] hover:w-[35vw] hover:h-[calc(15vw+20vh)] hover:left");
+    const [mapConditional, setMapConditional] = useState("sm:w-[calc(15vw+5vh)] sm:h-[calc(5vw+10vh)] sm:hover:w-[35vw] sm:hover:h-[calc(15vw+20vh)] hover:left");
+    const [mapToggleText, setMapToggleText] = useState("Show Map");
 
     const [roundData, setRoundData] = useState({
         score: 0,
@@ -95,6 +96,7 @@ export default function Index() {
     const handleSubmit = async () => {
 
         if (gameOver) return returnHome();
+        if (timeRemainingString != "-00:00") setMapToggleText("View Score");
 
         setOverlayText("Submitting Guess...");
         setIsOverlayVisible(true);
@@ -217,6 +219,18 @@ export default function Index() {
         setTimeout(updateDistance, 100);
     }
 
+    const handleToggleMap = () => {
+        if (mapToggleText == "View Score") {
+            setMapConditional("")
+            setMapToggleText("Show Map");
+            return;
+        }
+
+        const showMap = mapToggleText == "Show Map";
+        setMapConditional(showMap ? "m-0 w-full h-full opacity-100" : "opacity-40 m-4")
+        setMapToggleText(showMap ? "Hide Map" : "Show Map");
+    }
+
     async function fetchGame() {
         // @ts-ignore
         if (typeof setLocation == "undefined") {
@@ -291,8 +305,11 @@ export default function Index() {
                 <StreetView lat={location.lat} lng={location.lng} />
                 <div className={mapStyle + mapConditional}>
                     <Map lat={0} lng={0} />
-                    <button onClick={handleSubmit} className="z-50 fixed accent-to-primary font-semibold p-3 rounded-lg left-5 bottom-5 hover:saturate-0 duration-300">
+                    <button onClick={handleSubmit} className={"z-50 fixed accent-to-primary font-semibold p-3 rounded-lg left-5 bottom-5 hover:saturate-0 duration-300 sm:block " + (mapToggleText == "Hide Map" ? "block" : "hidden")}>
                         Submit
+                    </button>
+                    <button onClick={handleToggleMap} className={"z-50 fixed accent-to-primary font-semibold p-3 rounded-full left-1/2 -translate-x-1/2 bottom-5 duration-300 block sm:hidden " + (mapToggleText == "Hide Map" ? "saturate-50" : "") + (isOverlayVisible && mapToggleText != "View Score" ? "hidden" : "")}>
+                        {mapToggleText}
                     </button>
                 </div>
             </div>
@@ -310,7 +327,7 @@ export default function Index() {
                 {
                     isSubmittingGuess ? (
                         <div className="font-bold center-self absolute text-white items-center flex flex-col justify-center">
-                            <h1 className="text-8xl">
+                            <h1 className="text-4xl md:text-8xl">
                                 {overlayText}
                             </h1>
                             <h4 className="text-4xl text-white/50">
@@ -383,7 +400,7 @@ export default function Index() {
                             </h4>
                         </div>
                     ) : (
-                        <div className="z-50 absolute center-self h-full w-full flex items-center justify-center flex-col game-stat">
+                        <div className="z-50 absolute center-self h-full w-full flex items-center justify-center flex-col game-stat text-sm sm:text-md md:text-xl">
                             <h1>
                                 You scored {roundData.score} points
                             </h1>

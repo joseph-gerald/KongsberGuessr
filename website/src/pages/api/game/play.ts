@@ -202,7 +202,7 @@ export default async function validate(req: NextApiRequest, res: NextApiResponse
                         return;
                     }
 
-                    if (Object.keys(game.players).length < 2) {
+                    if (Object.keys(game.players).length < 1) {
                         res.status(400).json({ error: 'Not enough players' })
                         return;
                     }
