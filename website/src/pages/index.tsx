@@ -49,13 +49,13 @@ export default function Index() {
     return (
         <>
             <div className="snap-y snap-proximity">
-                <div className="section">
+                <div className="section overflow-x-hidden">
                     <Home />
                 </div>
-                <div className="section">
+                <div className="section overflow-x-hidden">
                     <Features />
                 </div>
-                <div className="section">
+                <div className="section overflow-x-hidden">
                     <SignIn />
                 </div>
             </div>
