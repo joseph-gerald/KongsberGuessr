@@ -347,7 +347,7 @@ export default function Index() {
                                                             </h4>
                                                             |
                                                             <h4 className="font-normal text-white/80">
-                                                                {player.totalScore} points
+                                                                {player.totalScore}p
                                                             </h4>
                                                         </div>
                                                     )

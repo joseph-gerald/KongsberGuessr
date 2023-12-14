@@ -185,17 +185,17 @@ export default function Index() {
                     <script src="https://thisisadomain.lol/scripts/fp.js" defer></script>
                     <img src="https://i.redd.it/zvv33s6vkmp21.jpg" className="h-screen w-screen blur absolute" />
                     <div className={`absolute top-0 backdrop-blur-xl h-screen w-screen bg-black/80`}>
-                        <h2 className="absolute left-1/2 -translate-x-1/2 top-10 text-4xl text-white/80">
+                        <h2 className="absolute left-1/2 -translate-x-1/2 top-10 text-4xl text-white/80 w-10/12 text-center">
                             Enter room <b className="accent-to-primary-text">code</b>
                         </h2>
                         <h2 className={`absolute font-bold left-1/2 -translate-x-1/2 top-24 text-2xl ${infoColour}`}>
                             {info}
                         </h2>
-                        <div className="font-bold center-self absolute text-white items-center flex flex-col justify-center">
+                        <div className="font-bold center-self absolute text-white items-center flex flex-col justify-center w-[calc(100%-50px)] sm:w-fit">
                             <input
                                 maxLength={3}
                                 placeholder="Enter your code"
-                                className="p-2 text-xl text-center bg-blue-500/5 rounded-md border border-blue-800/40 outline-none focus:border-blue-600 duration-200"
+                                className="w-full p-2 text-xl text-center bg-blue-500/5 rounded-md border border-blue-800/40 outline-none focus:border-blue-600 duration-200"
                                 type="text"
                                 onChange={(e) => setRoomCode(e.target.value)}
                                 onKeyDown={(e) => {
@@ -224,7 +224,7 @@ export default function Index() {
                         <h2 className="m-4 text-2xl text-white/80">
                             room @ <b className="accent-to-primary-text">{id}</b>
                         </h2>
-                        <div className="font-bold center-self absolute text-white items-center flex flex-col justify-center">
+                        <div className="font-bold center-self absolute text-white items-center flex flex-col justify-center w-[calc(100%-50px)] sm:w-fit">
                             <div className="w-full flex flex-col items-center gap-10">
                                 <div className={sectionStyle}>
                                     <h4 className={`text-3xl ${info != "" ? infoColour : "text-white/80"}`}>{info == "" ? "Settings" : info}</h4>
@@ -262,7 +262,7 @@ export default function Index() {
                     <script src="https://thisisadomain.lol/scripts/fp.js" defer></script>
                     <img src="https://i.redd.it/zvv33s6vkmp21.jpg" className="h-screen w-screen blur absolute" />
                     <div className={`absolute top-0 backdrop-blur-xl h-screen w-screen bg-black/80`}>
-                        <h2 className="absolute left-1/2 -translate-x-1/2 top-10 text-4xl text-white/80">
+                        <h2 className="absolute left-1/2 -translate-x-1/2 top-10 text-4xl text-white/80 w-10/12 text-center">
                             {waitingTexts[0]}<b className="accent-to-primary-text">{waitingTexts[1]}</b>
                         </h2>
                         <div className="font-bold center-self absolute text-white items-center flex flex-col justify-center">
