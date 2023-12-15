@@ -25,21 +25,21 @@ export default function Select() {
                 break;
             default:
                 location.reload();
-                //alert(res.status + "\n" + res.statusText)
+            //alert(res.status + "\n" + res.statusText)
         }
     }
 
     return (
         <>
-            <div className="bg-black/80 sm:bg-[#212121] snap-y snap-proximity h-screen w-screen flex items-center justify-center relative">
+            <div className="bg-black/80 sm:bg-[#212121] snap-y snap-proximity h-[950px] sm:h-screen w-screen flex items-center justify-center relative">
                 <div className="circle hidden sm:inline-block">
                     <img src="/imgs/mesh.png" alt="" />
                 </div>
 
-                <div className="absolute sm:bg-black/50 backdrop-blur-md rounded-3xl px-3 py-4">
+                <div className="absolute sm:bg-black/50 backdrop-blur-md rounded-3xl sm:px-3 sm:py-4 w-full sm:w-auto">
                     <div className="flex justify-between m-7">
-                        <div className="flex items-center flex-col">
-                            <h2 className="clash-display font-bold text-6xl text-white/70 mb-6">Choose Mode</h2>
+                        <div className="flex items-center flex-col w-full sm:w-auto">
+                            <h2 className="clash-displays font-bold text-4xl sm:text-6xl text-white/70 mb-6">Choose Mode</h2>
                             <div className="flex flex-col sm:flex-row gap-5 w-full">
                                 <button onClick={() => createGame("solo")} className={"bg-[#CF5050]/50 " + buttonStyle}>
                                     <svg width={svgSize} height={svgSize} viewBox="0 0 25 32" fill="none" xmlns="http://www.w3.org/2000/svg">

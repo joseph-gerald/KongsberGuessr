@@ -72,7 +72,7 @@ export default function Index() {
 
     const [isHost, setIsHost] = useState(false);
 
-    const [mapConditional, setMapConditional] = useState("sm:w-[calc(15vw+5vh)] sm:h-[calc(5vw+10vh)] sm:hover:w-[35vw] sm:hover:h-[calc(15vw+20vh)] hover:left");
+    const [mapConditional, setMapConditional] = useState("sm:w-[calc(15vw+5vh)] sm:h-[calc(5vw+10vh)] sm:hover:w-[35vw] sm:hover:h-[calc(15vw+20vh)] hover:left opacity-40 m-4");
     const [mapToggleText, setMapToggleText] = useState("Show Map");
 
     const [roundData, setRoundData] = useState({
