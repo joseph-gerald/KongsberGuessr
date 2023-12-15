@@ -333,7 +333,7 @@ export default async function validate(req: NextApiRequest, res: NextApiResponse
                         return;
                     }
 
-                    const locations = await game_utils.getProximateLocations(500);
+                    const locations = await game_utils.getProximateLocations(2500);
 
                     const currentRound = {
                         round_id: round,
@@ -470,20 +470,28 @@ export default async function validate(req: NextApiRequest, res: NextApiResponse
                 return;
             }
 
+            if (rnd.finished) {
+                res.status(400).json({ error: 'Round already finished' })
+                return;
+            }
+
+            rnd.finished = Date.now();
+
             const destination = rnd.end_location;
 
             const dist = game_utils.calculateDistance(destination.lat, destination.lng, location.lat, location.lng);
             const original_distance = game_utils.calculateDistance(rnd.start_location.lat, rnd.start_location.lng, destination.lat, destination.lng);
-            const time_taken = Date.now() - rnd.started;
+            const time_taken = rnd.finished - rnd.started;
+            const points = Math.round(Math.round((Math.round(original_distance * 2 * 0.01) * 100 - time_taken * 0.1) / 100) * 100);
 
             if (dist > 15) {
                 res.status(400).json({ error: 'Invalid' })
                 return;
             }
 
-            res.json({ data: { time_taken, original_distance } });
+            res.json({ data: { time_taken, original_distance, points } });
 
-            User.findOneAndUpdate({ _id: user._id }, { xp: user.xp + 10000 }).exec();
+            User.findOneAndUpdate({ _id: user._id }, { xp: user.xp + points }).exec();
 
             Navigation.create({
                 user: user._id,

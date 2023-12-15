@@ -72,6 +72,7 @@ export default function Index() {
     const [roundData, setRoundData] = useState({
         time_taken: 0,
         original_distance: 0,
+        points: 0
     });
 
     // fetch game data with id
@@ -136,8 +137,9 @@ export default function Index() {
 
         setTimeUsedString(calculateTimeDifference(roundStartTime));
 
-        if (distance < 10) {
+        if (distance < 10 && !isOverlayVisible) {
             handleSubmit();
+            return;
         }
 
         setTimeout(updateDistance, 100);
@@ -259,7 +261,7 @@ export default function Index() {
                     ) : (
                         <div className="z-50 absolute center-self h-full w-full flex items-center justify-center flex-col game-stat text-sm sm:text-md md:text-xl">
                             <h1>
-                                You scored 10,000 points
+                                You scored {roundData.points.toLocaleString()} points
                             </h1>
                             <hr className="border w-96 m-2 mb-6" />
                             <h2>
