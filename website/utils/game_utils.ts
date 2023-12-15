@@ -71,20 +71,27 @@ async function getRandomPlace(): Promise<{ lat: number, lng: number, address: st
 
     let data = (await getGeoData(lat, lng));
 
+    const isMiddleOfNowhere = data.geometry.location_type === "GEOMETRIC_CENTER";
+
     const {latMin, lngMin} = data.geometry.viewport.northeast;
     const {latMax, lngMax} = data.geometry.viewport.southwest;
     
     const area = calculateArea(latMin, latMax, lngMin, lngMax);
 
-    if (area > 1E-5) {
-        console.log("area too big, retrying", area);
+    // avoid sending request to check for street view if we know it's in the middle of nowhere
+    if (isMiddleOfNowhere) {
         return await getRandomPlace();
     }
 
     const streetView = await getStreetView(lat, lng);
 
-    if (!streetView.status || streetView.status !== "OK") {
-        //console.log("not a valid street view, retrying");
+    // catch locations without street view
+    if (!streetView.status || streetView.status == "ZERO_RESULTS") {
+        return await getRandomPlace();
+    }
+
+    // catch locations that won't allow us to move around
+    if (streetView.copyright != "© Google") {
         return await getRandomPlace();
     }
 
