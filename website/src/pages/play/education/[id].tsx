@@ -66,23 +66,12 @@ export default function Index() {
     const [timeUsedString, setTimeUsedString] = useState("");
     const [roundStartTime, setRoundStartTime] = useState(0);
 
-    const [mapConditional, setMapConditional] = useState("sm:w-[calc(15vw+5vh)] sm:h-[calc(5vw+10vh)] sm:hover:w-[35vw] sm:hover:h-[calc(15vw+20vh)] hover:left opacity-40 m-4");
+    const [mapConditional, setMapConditional] = useState("sm:w-[calc(15vw+5vh)] sm:h-[calc(5vw+10vh)] sm:hover:w-[35vw] sm:hover:h-[calc(15vw+20vh)] hover:left opacity-80 m-4");
     const [mapToggleText, setMapToggleText] = useState("Show Map");
 
     const [roundData, setRoundData] = useState({
-        score: 0,
-        guess: {
-            lat: 0,
-            lng: 0,
-            address: "",
-        },
-        location: {
-            lat: 0,
-            lng: 0,
-            address: "",
-        },
-        distance: 0,
         time_taken: 0,
+        original_distance: 0,
     });
 
     // fetch game data with id
@@ -93,9 +82,6 @@ export default function Index() {
         setOverlayText("Submitting Guess...");
         setIsOverlayVisible(true);
 
-        // @ts-ignore
-        setAnswerMarker(startLocation.lat, startLocation.lng);
-
         const res = await fetch(game_utils.origin + '/api/game/play', {
             method: 'POST',
             headers: {
@@ -103,10 +89,10 @@ export default function Index() {
             },
             body: JSON.stringify({
                 round: round,
-                action: "guess",
+                action: "arrived",
                 id,
                 // @ts-ignore
-                guess: getLocation()
+                location: getLocation()
             })
         });
 
@@ -149,6 +135,10 @@ export default function Index() {
         setPlayerLocation(location.lat, location.lng)
 
         setTimeUsedString(calculateTimeDifference(roundStartTime));
+
+        if (distance < 10) {
+            handleSubmit();
+        }
 
         setTimeout(updateDistance, 100);
     }
@@ -250,9 +240,6 @@ export default function Index() {
                 <StreetView lat={data.start.lat} lng={data.start.lng} />
                 <div className={mapStyle + mapConditional}>
                     <EducationMap lat={0} lng={0} />
-                    <button onClick={handleSubmit} className={"z-50 fixed accent-to-primary font-semibold p-3 rounded-lg left-5 bottom-5 hover:saturate-0 duration-300 sm:block " + (mapToggleText == "Hide Map" ? "block" : "hidden")}>
-                        Submit
-                    </button>
                     <button onClick={handleToggleMap} className={"z-50 fixed accent-to-primary font-semibold p-3 rounded-full left-1/2 -translate-x-1/2 bottom-5 duration-300 block sm:hidden " + (mapToggleText == "Hide Map" ? "saturate-50" : "") + (isOverlayVisible && mapToggleText != "View Score" ? "hidden" : "")}>
                         {mapToggleText}
                     </button>
@@ -272,20 +259,20 @@ export default function Index() {
                     ) : (
                         <div className="z-50 absolute center-self h-full w-full flex items-center justify-center flex-col game-stat text-sm sm:text-md md:text-xl">
                             <h1>
-                                You scored {roundData.score} points
+                                You scored 10,000 points
                             </h1>
                             <hr className="border w-96 m-2 mb-6" />
                             <h2>
-                                You guessed {roundData.guess.address}
+                                You went from {startLocation.address}
                             </h2>
                             <h2>
-                                It was actually {roundData.location.address}
+                                To {endLocation.address}
                             </h2>
                             <h2>
-                                You were off by {roundData.distance} meters
+                                You traveled {Math.round(roundData.original_distance)} meters
                             </h2>
                             <h2>
-                                You used {(roundData.time_taken / 1000).toFixed(2)} seconds
+                                You took {Math.round(roundData.time_taken / 1000 / 60)} seconds
                             </h2>
                             <button onClick={handleNext} className="absolute w-64 mt-8 accent-to-primary font-semibold p-3 rounded-lg left-1/2 -translate-x-1/2 bottom-5 z-40 hover:saturate-0 duration-300">
                                 Next

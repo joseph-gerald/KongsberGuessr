@@ -6,6 +6,7 @@ import User from '../../../../models/User';
 import tracking_utils from '../../../../utils/tracking_utils';
 import Guess from '../../../../models/Guess';
 import Game from '../../../../models/Game';
+import Navigation from '../../../../models/Navigation';
 
 client.db("KongsberGuessr").collection("games");
 client.db("KongsberGuessr").collection("guesses");
@@ -332,7 +333,7 @@ export default async function validate(req: NextApiRequest, res: NextApiResponse
                         return;
                     }
 
-                    const locations = await game_utils.getProximateLocations(2000);
+                    const locations = await game_utils.getProximateLocations(500);
 
                     const currentRound = {
                         round_id: round,
@@ -451,6 +452,60 @@ export default async function validate(req: NextApiRequest, res: NextApiResponse
 
             res.json({ data: rnd });
             return;
+        case "arrived":
+            if (!(game instanceof EducationGame)) {
+                res.status(400).json({ error: 'Invalid game' })
+                return;
+            }
+
+            const location = req.body.location;
+
+            if (!location) {
+                res.status(400).json({ error: 'Invalid location' })
+                return;
+            }
+
+            if (!rnd) {
+                res.status(400).json({ error: 'Invalid round' })
+                return;
+            }
+
+            const destination = rnd.end_location;
+
+            const dist = game_utils.calculateDistance(destination.lat, destination.lng, location.lat, location.lng);
+            const original_distance = game_utils.calculateDistance(rnd.start_location.lat, rnd.start_location.lng, destination.lat, destination.lng);
+            const time_taken = Date.now() - rnd.started;
+
+            if (dist > 15) {
+                res.status(400).json({ error: 'Invalid' })
+                return;
+            }
+
+            res.json({ data: { time_taken, original_distance } });
+
+            User.findOneAndUpdate({ _id: user._id }, { xp: user.xp + 10000 }).exec();
+
+            Navigation.create({
+                user: user._id,
+                game: game.db._id,
+
+                round: round,
+
+                start_time: rnd.started,
+                time_taken: time_taken,
+
+                score: 10000,
+
+                start_lat: rnd.start_location.lat,
+                start_lng: rnd.start_location.lng,
+
+                end_lat: rnd.end_location.lat,
+                end_lng: rnd.end_location.lng,
+
+                final_lat: location.lat,
+                final_lng: location.lng,
+            })
+            break;
         default:
             res.status(400).json({ error: 'Invalid' })
             return;

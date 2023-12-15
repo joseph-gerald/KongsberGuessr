@@ -193,10 +193,18 @@ const EducationMap: React.FC<StreetViewProps> = ({ lat, lng }) => {
                 }
 
                 // @ts-ignore
+                window.getLocation = () => {
+                    if (startMarkerRef.current) {
+                        const position = startMarkerRef.current.getPosition();
+                        return position?.toJSON();
+                    }
+                }
+
+                // @ts-ignore
                 window.setPlayerLocation = (lat, lng) => {
                     const oldMarkerCurrent = startMarkerRef.current;
 
-                    const newMarker = new google.maps.Marker({
+                    startMarkerRef.current = new google.maps.Marker({
                         position: { lat, lng },
                         map: map,
                         icon: {
@@ -205,12 +213,22 @@ const EducationMap: React.FC<StreetViewProps> = ({ lat, lng }) => {
                         },
                     });
 
-                    startMarkerRef.current = newMarker;
-
                     if (oldMarkerCurrent) {
                         setTimeout(() => {
                             oldMarkerCurrent.setMap(null);
                         }, 50);
+
+                        pathLine.current = new google.maps.Polyline({
+                            path: [
+                                { lat, lng },
+                                { lat: oldMarkerCurrent.getPosition()?.lat(), lng: oldMarkerCurrent.getPosition()?.lng() }
+                            ],
+                            map: map,
+                            geodesic: true,
+                            strokeColor: '#c76c27',
+                            strokeOpacity: 1.0,
+                            strokeWeight: 2,
+                        });
                     }
                 }
 

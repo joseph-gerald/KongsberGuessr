@@ -80,8 +80,8 @@ export default function Index() {
                             </div>
                         </>
             }
-            <footer className="fixed bottom-0 text-white p-1 px-2 bg-black/50 w-full backdrop-blur-md">
-                <a href="https://github.com/joseph-gerald/KongsberGuessr/releases" target="_blank">You are on <b className="accent-to-primary-text">build {game_utils.build}</b></a>
+            <footer className="fixed bottom-0 text-white p-1 pb-1.5 px-2 bg-black/50 w-full backdrop-blur-md">
+                <a href="https://github.com/joseph-gerald/KongsberGuessr/releases" target="_blank">You are on <b className="accent-to-primary-text">{game_utils.build_string}</b></a>
                 <div className="float-right">logged in as <b className="accent-to-primary-text">{username ?? ".........."}</b></div>
             </footer>
         </>

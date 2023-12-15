@@ -2,10 +2,14 @@ const origin: string = process.env.NEXT_PUBLIC_ORIGIN as string;
 const apiKey: string = process.env.NEXT_PUBLIC_GOOGLE_API_KEY as string;
 const privateApiKey: string = process.env.PRIVATE_GOOGLE_API_KEY as string;
 
+const development = process.env.NODE_ENV === "development";
+
 const locations: Promise<{ lat: number, lng: number, address: string }>[] = [];
 const max_rounds = 5;
-const minimum_backlog = 20;
+const minimum_backlog = 100;
 const build = "0.4.2";
+
+const build_string = development ? "development" : `build ${build}`;
 
 const places = {
     Kongsberg: {
@@ -106,7 +110,7 @@ async function getValidPlace(size: number): Promise<{ lat: number, lng: number, 
     if (minimum_backlog > locations.length) {
         const promises = [];
 
-        const placesToAdd = minimum_backlog - locations.length + 10; // add 10 extra to be sure
+        const placesToAdd = minimum_backlog - locations.length + 50; // add 50 extra to be sure
 
         for (let i = 0; i < placesToAdd; i++) {
             promises.push(getRandomPlace());
@@ -144,4 +148,4 @@ async function getProximateLocations(max_distance: number): Promise<{ lat: numbe
     });
 }
 
-export default { getValidPlace, getRandomPlace, getProximateLocations, calculateDistance, getGeoData, calculateScore, origin, apiKey, max_rounds, boundings, build };
+export default { getValidPlace, getRandomPlace, getProximateLocations, calculateDistance, getGeoData, calculateScore, origin, apiKey, max_rounds, boundings, build, build_string };
