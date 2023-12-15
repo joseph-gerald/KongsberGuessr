@@ -130,4 +130,18 @@ async function getValidPlace(size: number): Promise<{ lat: number, lng: number, 
     return await Promise.race(promises);
 }
 
-export default { getValidPlace, getRandomPlace, calculateDistance, getGeoData, calculateScore, origin, apiKey, max_rounds, boundings, build };
+async function getProximateLocations(max_distance: number): Promise<{ lat: number, lng: number, address: string }[]> {
+    const places = [getRandomPlace(), getRandomPlace()];
+
+    return Promise.all(places).then((data) => {
+        const distance = calculateDistance(data[0].lat, data[0].lng, data[1].lat, data[1].lng);
+
+        if (distance > max_distance) {
+            return getProximateLocations(max_distance);
+        }
+
+        return data;
+    });
+}
+
+export default { getValidPlace, getRandomPlace, getProximateLocations, calculateDistance, getGeoData, calculateScore, origin, apiKey, max_rounds, boundings, build };

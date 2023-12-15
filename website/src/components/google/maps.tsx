@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import { Loader } from "@googlemaps/js-api-loader";
 import game_utils from "../../../utils/game_utils";
+import { start } from "repl";
 
 const startLatmap = (game_utils.boundings.latMax + game_utils.boundings.latMin) / 2;
 const startLngmap = (game_utils.boundings.lngMax + game_utils.boundings.lngMin) / 2;
@@ -91,16 +92,10 @@ const Map: React.FC<StreetViewProps> = ({ lat, lng }) => {
 
                 // @ts-ignore
                 window.clearStuff = () => {
-                    if (answerMarkerRef.current) {
-                        answerMarkerRef.current.setMap(null);
-                    }
-
-                    if (answerLine.current) {
-                        answerLine.current.setMap(null);
-                    }
-
-                    if (markerRef.current) {
-                        markerRef.current.setMap(null);
+                    for (const item of [markerRef, answerMarkerRef, answerLine]) {
+                        if (item.current) {
+                            item.current.setMap(null);
+                        }
                     }
                 }
 
@@ -131,13 +126,12 @@ const Map: React.FC<StreetViewProps> = ({ lat, lng }) => {
                             { lat, lng },
                             { lat: markerRef.current?.getPosition()?.lat(), lng: markerRef.current?.getPosition()?.lng() }
                         ],
+                        map: map,
                         geodesic: true,
                         strokeColor: '#FF00FF', // Change stroke color to blue
                         strokeOpacity: 1.0,
                         strokeWeight: 2,
                     });
-
-                    answerLine.current.setMap(map);
                 }
             }
         });
@@ -146,5 +140,88 @@ const Map: React.FC<StreetViewProps> = ({ lat, lng }) => {
     return <div style={{ height: "100%", width: "100%", zIndex: 45 }} ref={mapRef} />;
 };
 
-export { StreetView, Map };
+const EducationMap: React.FC<StreetViewProps> = ({ lat, lng }) => {
+    const mapRef = useRef<HTMLDivElement>(null);
+    const startMarkerRef = useRef<google.maps.Marker | null>(null);
+    const endMarkerRef = useRef<google.maps.Marker | null>(null);
+    const pathLine = useRef<google.maps.Polyline | null>(null);
+
+    useEffect(() => {
+        const loader = new Loader({
+            apiKey: game_utils.apiKey,
+            version: "weekly",
+        });
+
+        function clearStuff() {
+            for (const item of [startMarkerRef, endMarkerRef, pathLine]) {
+                if (item.current) {
+                    item.current.setMap(null);
+                }
+            }
+        }
+
+        loader.load().then(() => {
+            if (mapRef.current) {
+                const map = new google.maps.Map(mapRef.current, {
+                    center: { lat: startLatmap, lng: startLngmap },
+                    zoom: 12,
+                    mapTypeControl: false,
+                    streetViewControl: false,
+                });
+
+                // @ts-ignore
+                window.setChallenge = (start: { lat: number, lng: number }, end: { lat: number, lng: number }) => {
+                    clearStuff();
+
+                    startMarkerRef.current = new google.maps.Marker({
+                        position: start,
+                        map: map,
+                        icon: {
+                            url: '/imgs/you_arrow.png',
+                            scaledSize: new google.maps.Size(50, 50),
+                        },
+                    });
+
+                    endMarkerRef.current = new google.maps.Marker({
+                        position: end,
+                        map: map,
+                        icon: {
+                            url: '/imgs/target_arrow.png',
+                            scaledSize: new google.maps.Size(100, 100),
+                        },
+                    });
+                }
+
+                // @ts-ignore
+                window.setPlayerLocation = (lat, lng) => {
+                    const oldMarkerCurrent = startMarkerRef.current;
+
+                    const newMarker = new google.maps.Marker({
+                        position: { lat, lng },
+                        map: map,
+                        icon: {
+                            url: '/imgs/you_arrow.png',
+                            scaledSize: new google.maps.Size(50, 50),
+                        },
+                    });
+
+                    startMarkerRef.current = newMarker;
+
+                    if (oldMarkerCurrent) {
+                        setTimeout(() => {
+                            oldMarkerCurrent.setMap(null);
+                        }, 50);
+                    }
+                }
+
+                // @ts-ignore
+                window.clearStuff = clearStuff;
+            }
+        });
+    }, [lat, lng]);
+
+    return <div style={{ height: "100%", width: "100%", zIndex: 45 }} ref={mapRef} />;
+};
+
+export { StreetView, Map, EducationMap };
 

@@ -34,6 +34,12 @@ class PvPGame extends GuessrGame {
     }
 }
 
+class EducationGame extends GuessrGame {
+    constructor(token: string) {
+        super(token);
+    }
+}
+
 let games: { [id: string]: GuessrGame; } = {};
 
 async function getRandomPlace() {
@@ -69,6 +75,19 @@ export default async function validate(req: NextApiRequest, res: NextApiResponse
                 return;
             case "pvp":
                 res.send({ id: "actions" });
+                break;
+            case "education":
+                game = games[token] = new EducationGame(token);
+
+                game.db = await Game.create({
+                    creator: user._id,
+                    session: session,
+                    game_id: game.id,
+                    mode: "education",
+                    settings: {},
+                });
+
+                res.send({ id: game.id });
                 break;
             default:
                 res.status(400).json({ error: 'Invalid mode' })
@@ -307,7 +326,34 @@ export default async function validate(req: NextApiRequest, res: NextApiResponse
                     }
                 }
             } else if (!pvp) {
-                if (round && typeof round == "number") {
+                if (game instanceof EducationGame) {
+                    if (game.rounds[round]) {
+                        res.status(400).json({ error: 'Round already started' })
+                        return;
+                    }
+
+                    const locations = await game_utils.getProximateLocations(2000);
+
+                    const currentRound = {
+                        round_id: round,
+                        started: Date.now(),
+                        finished: null,
+                        score: 0,
+                        start_location: locations[0],
+                        end_location: locations[1],
+                        distance: null,
+                        guess: null,
+                        time_taken: null,
+                    };
+
+                    game.rounds[round] = currentRound;
+
+                    res.json({
+                        start: currentRound.start_location,
+                        end: currentRound.end_location,
+                    });
+                    return;
+                } else if (round && typeof round == "number") {
                     if (rnd) {
                         res.status(400).json({ error: 'Round already started' })
                         return;
@@ -359,9 +405,9 @@ export default async function validate(req: NextApiRequest, res: NextApiResponse
                 rnd.finished = Date.now();
                 rnd.time_taken = rnd.finished - rnd.started;
                 rnd.distance = -1;
-    
+
                 rnd.score = 0;
-    
+
                 res.json({
                     data: rnd
                 });
