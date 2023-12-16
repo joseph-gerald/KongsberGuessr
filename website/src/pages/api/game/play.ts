@@ -458,10 +458,10 @@ export default async function validate(req: NextApiRequest, res: NextApiResponse
                 return;
             }
 
-            const location = req.body.location;
+            const { location, distance_traveled } = req.body;
 
-            if (!location) {
-                res.status(400).json({ error: 'Invalid location' })
+            if (!location || !distance_traveled) {
+                res.status(400).json({ error: 'Invalid body' })
                 return;
             }
 
@@ -482,7 +482,19 @@ export default async function validate(req: NextApiRequest, res: NextApiResponse
             const dist = game_utils.calculateDistance(destination.lat, destination.lng, location.lat, location.lng);
             const original_distance = game_utils.calculateDistance(rnd.start_location.lat, rnd.start_location.lng, destination.lat, destination.lng);
             const time_taken = rnd.finished - rnd.started;
-            const points = Math.round(Math.round((Math.round(original_distance * 2 * 0.01) * 100 - time_taken * 0.1) / 100) * 100);
+            const points = Math.max(
+                Math.min(
+                    Math.round(
+                        Math.round(
+                            (
+                                Math.round(
+                                    (original_distance * 2 + distance_traveled) * 0.01
+                                ) * 100 - time_taken * 0.01
+                            ) / 100
+                        ) * 100
+                    )
+                    , 10000),
+                1000);
 
             if (dist > 15) {
                 res.status(400).json({ error: 'Invalid' })

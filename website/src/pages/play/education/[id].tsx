@@ -54,6 +54,9 @@ export default function Index() {
         }
     };
 
+    const [distance_traveled, setDistanceTraveled] = useState(0);
+    let last_distance = 0;
+
     const mapStyle = "absolute z-50 left-0 bottom-0 hover:opacity-100 rounded-xl overflow-hidden duration-300 ";
 
     const [round, setRound] = useState(1);
@@ -92,6 +95,7 @@ export default function Index() {
                 round: round,
                 action: "arrived",
                 id,
+                distance_traveled,
                 // @ts-ignore
                 location: getLocation()
             })
@@ -132,6 +136,9 @@ export default function Index() {
         const distance = Math.round(game_utils.calculateDistance(location.lat, location.lng, endLocation.lat, endLocation.lng));
         setDistance(distance);
 
+        setDistanceTraveled(distance_traveled + Math.abs(distance - last_distance));
+        last_distance = distance;
+
         // @ts-ignore
         setPlayerLocation(location.lat, location.lng)
 
@@ -158,6 +165,9 @@ export default function Index() {
     }
 
     async function fetchGame() {
+
+        setDistanceTraveled(0);
+
         // @ts-ignore
         if (typeof setLocation == "undefined") {
             setTimeout(fetchGame, 100);
@@ -230,7 +240,7 @@ export default function Index() {
         <>
             <title>Solo</title>
             <h1 className="text-white absolute z-50 text-xl m-2 p-1 drop-shadow-2xl bg-black/40 backdrop-blur-md">
-                <b className="accent-to-primary-text">Starting on</b> {startLocation.address} / <b className="accent-to-primary-text">Navigating to</b> {endLocation.address}
+                <b className="accent-to-primary-text">Starting on</b> {startLocation.address} / <b className="accent-to-primary-text">Navigate to</b> {endLocation.address}
             </h1>
             <h1 className="text-white absolute z-50 top-10 text-xl m-2 p-1 drop-shadow-2xl bg-black/40 backdrop-blur-md">
                 {timeUsedString} used / {distance}m from target
@@ -271,10 +281,10 @@ export default function Index() {
                                 To {endLocation.address}
                             </h2>
                             <h2>
-                                You traveled {Math.round(roundData.original_distance)} meters
+                                You traveled {Math.round(distance_traveled)} meters
                             </h2>
                             <h2>
-                                You took {Math.round(roundData.time_taken / 1000 / 60)} seconds
+                                You took {calculateTimeDifference(Date.now() - roundData.time_taken)} to complete the round
                             </h2>
                             <button onClick={handleNext} className="absolute w-64 mt-8 accent-to-primary font-semibold p-3 rounded-lg left-1/2 -translate-x-1/2 bottom-5 z-40 hover:saturate-0 duration-300">
                                 Next

@@ -166,7 +166,8 @@ const EducationMap: React.FC<StreetViewProps> = ({ lat, lng }) => {
                     center: { lat: startLatmap, lng: startLngmap },
                     zoom: 12,
                     mapTypeControl: false,
-                    streetViewControl: false,
+                    streetViewControl: true,
+                    mapTypeId: "satellite"
                 });
 
                 // @ts-ignore
