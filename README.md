@@ -21,6 +21,8 @@ Learn and become more familiar with Kongsberg in a fun and intuitive way!
 - [x] Multiplayer (rough)
 - [x] Fast
 - [x] Responsive
+- [ ] 2 GameModes (Geussr & Educational)
+- [ ] Education (80% done)
 
 ## Setting up a Workspace
 ```bash
