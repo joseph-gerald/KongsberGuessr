@@ -57,6 +57,9 @@ export default function Index() {
     const [distance, setDistance] = useState(0);
     const [maxRounds, setMaxRounds] = useState(0);
     const [currentScore, setCurrentScore] = useState(0);
+    const [scoreAnimated, setScoreAnimated] = useState(0);
+
+    let animated = 0;
 
     const [timeRemainingString, setTimeRemainingString] = useState("");
     const [roundStartTime, setRoundStartTime] = useState(0);
@@ -123,6 +126,18 @@ export default function Index() {
         setRoundData(data.data);
         setCurrentScore(currentScore + data.data.score);
         setIsSubmittingGuess(false);
+
+        let lastAnimated = 0;
+        animated = 0;
+
+        while (animated < data.data.score - 1) {
+            animated = animated + (data.data.score - animated) / 100;
+            setScoreAnimated(Math.ceil(animated));
+            await new Promise(r => setTimeout(r, 5));
+            if (lastAnimated > animated) return;
+        }
+
+        setScoreAnimated(data.data.score);
     };
 
     const performUpdate = async (bypass = false) => {
@@ -401,7 +416,7 @@ export default function Index() {
                     ) : (
                         <div className="z-50 absolute center-self h-full w-full flex items-center justify-center flex-col game-stat text-sm sm:text-md md:text-xl">
                             <h1>
-                                You scored {roundData.score.toLocaleString()} points
+                                You scored {scoreAnimated.toLocaleString()} points
                             </h1>
                             <hr className="border w-96 m-2 mb-6" />
                             <h2>

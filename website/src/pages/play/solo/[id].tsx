@@ -29,8 +29,12 @@ export default function Index() {
     const [distance, setDistance] = useState(0);
     const [gameOver, setGameOver] = useState(false);
     const [fetching, setFetching] = useState(true);
+    const [scoreAnimated, setScoreAnimated] = useState(0);
     const [isOverlayVisible, setIsOverlayVisible] = useState(true);
     const [isSubmittingGuess, setIsSubmittingGuess] = useState(true);
+
+    const [currentScore, setCurrentScore] = useState(0);
+    let animated = 0;
     
     const [mapConditional, setMapConditional] = useState("sm:w-[calc(15vw+5vh)] sm:h-[calc(5vw+10vh)] sm:hover:w-[35vw] sm:hover:h-[calc(15vw+20vh)] hover:left opacity-40 m-4");
     const [mapToggleText, setMapToggleText] = useState("Show Map");
@@ -79,7 +83,20 @@ export default function Index() {
         const data = await res.json();
 
         setRoundData(data.data);
+        setCurrentScore(currentScore + data.data.score);
         setIsSubmittingGuess(false);
+
+        let lastAnimated = 0;
+        animated = 0;
+
+        while (animated < data.data.score - 1) {
+            animated = animated + (data.data.score - animated) / 100;
+            setScoreAnimated(Math.ceil(animated));
+            await new Promise(r => setTimeout(r, 5));
+            if (lastAnimated > animated) return;
+        }
+
+        setScoreAnimated(data.data.score);
     };
 
     const handleNext = () => {
@@ -169,6 +186,8 @@ export default function Index() {
 
         setIsOverlayVisible(false);
         setIsSubmittingGuess(true);
+
+        setScoreAnimated(0);
     }
 
     useEffect(() => {
@@ -186,7 +205,7 @@ export default function Index() {
                 round {round}/{game_utils.max_rounds}
             </h1>
             <h1 className="text-white absolute top-16 z-50 text-xl m-2 p-1 drop-shadow-2xl bg-black/30 backdrop-blur-md">
-                {distance}m from start
+                {currentScore.toLocaleString()} score / {distance}m from start
             </h1>
             <div className="bg-black/80 sm:bg-[#212121] snap-y snap-proximity h-screen w-screen flex items-center justify-center relative">
                 <StreetView lat={location.lat} lng={location.lng} />
@@ -214,7 +233,7 @@ export default function Index() {
                     ) : (
                         <div className="z-50 absolute center-self h-full w-full flex items-center justify-center flex-col game-stat text-sm sm:text-md md:text-xl">
                             <h1>
-                                You scored {roundData.score.toLocaleString()} points
+                                You scored {scoreAnimated.toLocaleString()} points
                             </h1>
                             <hr className="border w-96 m-2 mb-6" />
                             <h2>
