@@ -39,6 +39,22 @@ const StreetView: React.FC<StreetViewProps> = ({ lat, lng }) => {
                 }
 
                 // @ts-ignore
+                window.setStreetViewAnswerMarker = (lat, lng) => {
+                    if (marker) {
+                        marker.setMap(null);
+                    }
+
+                    marker = new google.maps.Marker({
+                        position: { lat, lng },
+                        map: streetView,
+                        icon: {
+                            url: '/imgs/target_arrow.png',
+                            scaledSize: new google.maps.Size(100, 100),
+                        },
+                    });
+                }
+
+                // @ts-ignore
                 window.setStreetViewMarker = (lat, lng) => {
 
                     if (marker) {
@@ -83,6 +99,7 @@ const StreetView: React.FC<StreetViewProps> = ({ lat, lng }) => {
 const Map: React.FC<StreetViewProps> = ({ lat, lng }) => {
     const mapRef = useRef<HTMLDivElement>(null);
     const markerRef = useRef<google.maps.Marker | null>(null);
+    const endMarkerRef = useRef<google.maps.Marker | null>(null);
     const answerMarkerRef = useRef<google.maps.Marker | null>(null);
     const answerLine = useRef<google.maps.Polyline | null>(null);
 
@@ -132,6 +149,10 @@ const Map: React.FC<StreetViewProps> = ({ lat, lng }) => {
 
                 // @ts-ignore
                 window.setAnswerMarker = (lat, lng) => {
+
+                    // @ts-ignore
+                    setStreetViewAnswerMarker(lat, lng);
+
                     if (answerMarkerRef.current) {
                         answerMarkerRef.current.setMap(null);
                     }
