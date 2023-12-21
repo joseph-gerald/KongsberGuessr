@@ -151,14 +151,6 @@ export default async function validate(req: NextApiRequest, res: NextApiResponse
                         gameFound.public.settings = settings;
                     }
 
-                    gameFound.db = await Game.create({
-                        creator: user._id,
-                        session: session,
-                        game_id: gameFound.id,
-                        mode: "pvp",
-                        settings: gameFound.public.settings,
-                    })
-
                     res.json(gameFound.public);
                 } else {
                     const rounds = gameFound.rounds;
