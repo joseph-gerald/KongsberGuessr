@@ -54,8 +54,9 @@ export default function Index() {
         }
     };
 
-    const [distance_traveled, setDistanceTraveled] = useState(0);
+    const [distanceTraveled, setDistanceTraveled] = useState(0);
     let last_distance = 0;
+    let distance_traveled = 0;
 
     const mapStyle = "absolute z-50 left-0 bottom-0 hover:opacity-100 rounded-xl overflow-hidden duration-300 ";
 
@@ -136,7 +137,8 @@ export default function Index() {
         const distance = Math.round(game_utils.calculateDistance(location.lat, location.lng, endLocation.lat, endLocation.lng));
         setDistance(distance);
 
-        setDistanceTraveled(distance_traveled + Math.abs(distance - last_distance));
+        if (last_distance != 0) distance_traveled += Math.abs(distance - last_distance);
+        setDistanceTraveled(distance_traveled);
 
         // @ts-ignore
         setPlayerLocation(location.lat, location.lng)
@@ -249,7 +251,7 @@ export default function Index() {
                 <b className="accent-to-primary-text">Starting on</b> {startLocation.address} / <b className="accent-to-primary-text">Navigate to</b> {endLocation.address}
             </h1>
             <h1 className="text-white absolute z-50 top-10 text-xl m-2 p-1 drop-shadow-2xl bg-black/40 backdrop-blur-md">
-                {timeUsedString} used / {distance}m from target
+                {timeUsedString} used / {distance}m from target / {distanceTraveled}m traveled
             </h1>
             <h1 className="text-white absolute z-50 top-20 text-2xl font-bold m-2 p-1.5 drop-shadow-2xl bg-black/40 backdrop-blur-md">
                 round {round}/{game_utils.max_rounds}
@@ -287,7 +289,7 @@ export default function Index() {
                                 To {endLocation.address}
                             </h2>
                             <h2>
-                                You traveled {Math.round(distance_traveled)} meters
+                                You traveled {Math.round(distanceTraveled)} meters
                             </h2>
                             <h2>
                                 You took {calculateTimeDifference(Date.now() - roundData.time_taken)} to complete the round

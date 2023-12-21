@@ -150,7 +150,7 @@ export default function Index() {
                 break;
             case 210:
                 setOverlayText("Game Over");
-                setOverlayDescription("You scored a total of " + (await res.json()).total + " points");
+                setOverlayDescription("You scored a total of " + (await res.json()).total.toLocaleString() + " points");
                 setGameOver(true)
                 return;
             default:
@@ -214,7 +214,7 @@ export default function Index() {
                     ) : (
                         <div className="z-50 absolute center-self h-full w-full flex items-center justify-center flex-col game-stat text-sm sm:text-md md:text-xl">
                             <h1>
-                                You scored {roundData.score} points
+                                You scored {roundData.score.toLocaleString()} points
                             </h1>
                             <hr className="border w-96 m-2 mb-6" />
                             <h2>

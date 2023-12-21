@@ -295,7 +295,7 @@ export default function Index() {
         <>
             <title>PvP</title>
             <h1 className="text-white absolute z-50 text-xl m-2 p-1 drop-shadow-2xl bg-black/40 backdrop-blur-md">
-                {currentScore} points / {timeRemainingString} left / {distance}m from start
+                {currentScore.toLocaleString()} points / {timeRemainingString} left / {distance}m from start
             </h1>
             <h1 className="text-white absolute z-50 top-10 text-2xl font-bold m-2 p-1.5 drop-shadow-2xl bg-black/40 backdrop-blur-md">
                 round {round}/{maxRounds}
@@ -380,7 +380,7 @@ export default function Index() {
                                                                 </h4>
                                                                 |
                                                                 <h4 className="font-normal">
-                                                                    {player.totalScore}
+                                                                    {player.totalScore.toLocaleString()}
                                                                 </h4>
                                                                 |
                                                                 <h4>
@@ -401,7 +401,7 @@ export default function Index() {
                     ) : (
                         <div className="z-50 absolute center-self h-full w-full flex items-center justify-center flex-col game-stat text-sm sm:text-md md:text-xl">
                             <h1>
-                                You scored {roundData.score} points
+                                You scored {roundData.score.toLocaleString()} points
                             </h1>
                             <hr className="border w-96 m-2 mb-6" />
                             <h2>

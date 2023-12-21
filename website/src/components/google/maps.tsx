@@ -15,6 +15,7 @@ const StreetView: React.FC<StreetViewProps> = ({ lat, lng }) => {
     const streetViewRef = useRef<HTMLDivElement>(null);
     let refrenceKey = lat + lng;
     let marker: google.maps.Marker | null = null;
+    let answerMarker: google.maps.Marker | null = null;
 
     useEffect(() => {
         const loader = new Loader({
@@ -40,16 +41,16 @@ const StreetView: React.FC<StreetViewProps> = ({ lat, lng }) => {
 
                 // @ts-ignore
                 window.setStreetViewAnswerMarker = (lat, lng) => {
-                    if (marker) {
-                        marker.setMap(null);
+                    if (answerMarker) {
+                        answerMarker.setMap(null);
                     }
 
-                    marker = new google.maps.Marker({
+                    answerMarker = new google.maps.Marker({
                         position: { lat, lng },
                         map: streetView,
                         icon: {
                             url: '/imgs/target_arrow.png',
-                            scaledSize: new google.maps.Size(100, 100),
+                            scaledSize: new google.maps.Size(500, 500),
                         },
                     });
                 }
