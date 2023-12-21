@@ -481,7 +481,7 @@ export default async function validate(req: NextApiRequest, res: NextApiResponse
                             (
                                 Math.round(
                                     (original_distance * 2 + distance_traveled) * 0.01
-                                ) * 100 - time_taken * 0.01
+                                ) * 100 - time_taken * 0.001
                             ) / 100
                         ) * 100
                     )
@@ -506,7 +506,7 @@ export default async function validate(req: NextApiRequest, res: NextApiResponse
                 start_time: rnd.started,
                 time_taken: time_taken,
 
-                score: 10000,
+                score: points,
 
                 start_lat: rnd.start_location.lat,
                 start_lng: rnd.start_location.lng,
