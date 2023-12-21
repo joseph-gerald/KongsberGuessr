@@ -7,9 +7,9 @@ const development = process.env.NODE_ENV === "development";
 const locations: Promise<{ lat: number, lng: number, address: string }>[] = [];
 const max_rounds = 5;
 const minimum_backlog = 100;
-const build = "0.5.0-dev";
+const build = "0.5.0";
 
-const build_string = development ? "development" : `build ${build}`;
+const build_string = development ? `build ${build}-dev` : `build ${build}`;
 
 const places = {
     Kongsberg: {
