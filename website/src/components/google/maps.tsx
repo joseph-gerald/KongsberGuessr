@@ -14,6 +14,7 @@ interface StreetViewProps {
 const StreetView: React.FC<StreetViewProps> = ({ lat, lng }) => {
     const streetViewRef = useRef<HTMLDivElement>(null);
     let refrenceKey = lat + lng;
+    let marker: google.maps.Marker | null = null;
 
     useEffect(() => {
         const loader = new Loader({
@@ -38,11 +39,41 @@ const StreetView: React.FC<StreetViewProps> = ({ lat, lng }) => {
                 }
 
                 // @ts-ignore
+                window.setStreetViewMarker = (lat, lng) => {
+
+                    if (marker) {
+                        marker.setMap(null);
+                    }
+
+                    const currentLat = streetView.getPosition()?.lat();
+                    const currentLng: any = streetView.getPosition()?.lng();
+
+                    const angle = Math.atan2(lat - streetView.getPosition()?.lat(), lng - streetView.getPosition()?.lng());
+                    const latInDirection = currentLat + Math.sin(angle) * 0.0001;
+                    const lngInDirection = currentLng + Math.cos(angle) * 0.0001;
+
+                    const scale = 200;
+
+                    marker = new google.maps.Marker({
+                        position: { lat: latInDirection, lng: lngInDirection },
+                        map: streetView,
+                        icon: {
+                            url: '/imgs/direction_arrow.png',
+                            scaledSize: new google.maps.Size(scale, scale),
+                            anchor: new google.maps.Point(0, 450)
+                        }
+                    });
+                }
+
+                // @ts-ignore
                 window.getPlayerLocation = (key) => {
                     if (refrenceKey != key) return "error";
                     return streetView.getPosition()?.toJSON();
                 }
+                // add marker
             }
+
+
         });
     }, [lat, lng]);
 
@@ -211,6 +242,9 @@ const EducationMap: React.FC<StreetViewProps> = ({ lat, lng }) => {
                     let last_distance = distance + 1;
 
                     const smoothness = 20;
+
+                    // @ts-ignore
+                    setStreetViewMarker(endMarkerRef.current.getPosition().lat(), endMarkerRef.current.getPosition().lng());
 
                     while (distance > 0.0001 && distance < last_distance) {
 

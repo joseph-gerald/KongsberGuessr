@@ -225,6 +225,8 @@ export default function Index() {
         setLocation(data.start.lat, data.start.lng)
         // @ts-ignore
         setChallenge(data.start, data.end);
+        // @ts-ignore
+        setStreetViewMarker(data.end.lat, data.end.lng);
 
         setFetching(false);
 
