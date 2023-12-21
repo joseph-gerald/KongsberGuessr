@@ -123,7 +123,7 @@ export default function Index() {
 
     const updateDistance = () => {
         // @ts-ignore
-        if (typeof getPlayerLocation == "undefined") {
+        if (typeof getPlayerLocation == "undefined" || typeof setLocationAndZoom == "undefined") {
             return;
         }
         // @ts-ignore
@@ -137,12 +137,16 @@ export default function Index() {
         setDistance(distance);
 
         setDistanceTraveled(distance_traveled + Math.abs(distance - last_distance));
-        last_distance = distance;
 
         // @ts-ignore
         setPlayerLocation(location.lat, location.lng)
 
         setTimeUsedString(calculateTimeDifference(roundStartTime));
+
+        // @ts-ignore
+        if (distance != last_distance) setLocationAndZoom(location.lat, location.lng, 16);
+
+        last_distance = distance;
 
         if (distance < 10 && !isOverlayVisible) {
             handleSubmit();

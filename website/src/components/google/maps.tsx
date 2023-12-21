@@ -202,6 +202,33 @@ const EducationMap: React.FC<StreetViewProps> = ({ lat, lng }) => {
                 }
 
                 // @ts-ignore
+                window.setLocationAndZoom = async (targetLat, targetLng, targetZoom) => {
+                    let lat = map.getCenter().lat();
+                    let lng = map.getCenter().lng();
+                    let zoom = map.getZoom();
+
+                    let distance = Math.sqrt(Math.pow(targetLat - lat, 2) + Math.pow(targetLng - lng, 2));
+                    let last_distance = distance + 1;
+
+                    const smoothness = 20;
+
+                    while (distance > 0.0001 && distance < last_distance) {
+
+                        lat = lat + (targetLat - lat) / (smoothness);
+                        lng = lng + (targetLng - lng) / (smoothness);
+                        zoom = zoom + (targetZoom - zoom) / (smoothness);
+
+                        map.setCenter({ lat, lng });
+                        map.setZoom(zoom);
+
+                        last_distance = distance;
+                        distance = Math.sqrt(Math.pow(targetLat - lat, 2) + Math.pow(targetLng - lng, 2));
+
+                        await new Promise((r) => setTimeout(r, 5));
+                    }
+                }
+
+                // @ts-ignore
                 window.setPlayerLocation = (lat, lng) => {
                     const oldMarkerCurrent = startMarkerRef.current;
 
