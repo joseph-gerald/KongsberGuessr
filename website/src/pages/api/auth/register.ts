@@ -37,7 +37,9 @@ export default async function register(req: NextApiRequest, res: NextApiResponse
         return
     }
 
-    if (await User.findOne({ username })) {
+    if (await User.findOne(
+        { username: new RegExp(`^${username}$`, 'i') }
+    )) {
         res.status(400).json({ error: 'Username already taken' })
         return
     }
