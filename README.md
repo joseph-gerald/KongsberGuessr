@@ -21,8 +21,8 @@ Learn and become more familiar with Kongsberg in a fun and intuitive way!
 - [x] Multiplayer (rough)
 - [x] Fast
 - [x] Responsive
-- [ ] 2 GameModes (Geussr & Educational)
-- [ ] Education (80% done)
+- [x] 2.5 GameModes (Geussr, Geussr PvP & Educational)
+- [x] Education
 
 ## Setting up a Workspace
 ```bash
@@ -131,3 +131,13 @@ MONGODB_URI=""
 | Game Over (PvP) |
 | --------------- |
 | ![image](https://github.com/joseph-gerald/KongsberGuessr/assets/73967013/4e743176-9995-4ef7-aac6-729dae3a80ec) |
+
+#### Education Mode
+
+| Education Mode HUD |
+| ------------------ |
+| ![image](https://github.com/joseph-gerald/kongsber-guessr/assets/73967013/b2372b73-6770-4456-b3ac-fda5b466feb7) |
+
+| Game Over (Education Mode) |
+| -------------------------- |
+| ![image](https://github.com/joseph-gerald/kongsber-guessr/assets/73967013/90ce7852-6b19-4dc0-8315-b4e6b3905eae) |
