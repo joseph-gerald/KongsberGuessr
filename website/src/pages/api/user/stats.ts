@@ -19,19 +19,18 @@ export default async function validate(req: NextApiRequest, res: NextApiResponse
     let accuracy = guesses.reduce((acc: number, guess: any) => acc + guess.distance, 0) / guesses.length;
     let score = Math.round(guesses.reduce((acc: number, guess: any) => acc + guess.score, 0) / guesses.length);
     let time = Math.round(guesses.reduce((acc: number, guess: any) => acc + guess.time_taken, 0) / guesses.length / 1000);
-    
+
     // get all players and calculate average accuracy, score and time
 
-    const allPlayers = await User.find({}).sort({ createdAt: -1 });
+    const allGuesses = await Guess.find({}).sort({ createdAt: -1 }).limit(5);
     const globalData = [];
 
-    for (const player of allPlayers) {
-        if (player._id.toString() == user._id.toString()) continue;
-        const guesses = await Guess.find({ user: player._id }).sort({ createdAt: -1 }).limit(5);
+    for (const guess of allGuesses) {
+        if (guess.user.toString() == user._id.toString()) continue;
 
-        const accuracy = guesses.reduce((acc: number, guess: any) => acc + guess.distance, 0) / guesses.length;
-        const score = guesses.reduce((acc: number, guess: any) => acc + guess.score, 0) / guesses.length;
-        const time = guesses.reduce((acc: number, guess: any) => acc + guess.time_taken, 0) / guesses.length;
+        const accuracy = guess.distance;
+        const score = guess.score;
+        const time = guess.time_taken / 1000;
 
         if (isNaN(accuracy) || isNaN(score) || isNaN(time)) continue;
 
@@ -43,26 +42,22 @@ export default async function validate(req: NextApiRequest, res: NextApiResponse
     }
 
     let globalAccuracy = globalData.reduce((acc: number, data: any) => acc + data.accuracy, 0) / globalData.length;
-    const globalScore =  Math.round(globalData.reduce((acc: number, data: any) => acc + data.score, 0) / globalData.length);
-    const globalTime =   Math.round(globalData.reduce((acc: number, data: any) => acc + data.time, 0) / globalData.length / 1000);
+    const globalScore = Math.round(globalData.reduce((acc: number, data: any) => acc + data.score, 0) / globalData.length);
+    const globalTime = Math.round(globalData.reduce((acc: number, data: any) => acc + data.time, 0) / globalData.length);
 
     accuracy = Math.ceil((1000 - accuracy) / 10);
     globalAccuracy = Math.ceil((1000 - globalAccuracy) / 10);
 
-    if (isNaN(accuracy)) accuracy = -1;
-    if (isNaN(time)) time = -1;
-    if (isNaN(score)) score = -1;
-
     const personal = {
-        accuracy,
-        score,
-        time
+        accuracy: accuracy || -1,
+        score: score || -1,
+        time: time || -1
     }
 
     const global = {
-        accuracy: globalAccuracy,
-        score: globalScore,
-        time: globalTime
+        accuracy: globalAccuracy || -1,
+        score: globalScore || -1,
+        time: globalTime || -1
     }
 
     res.status(200).json({ personal, global });

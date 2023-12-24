@@ -1,14 +1,6 @@
 import LeaderboardItem from "./components/LeaderboardItem";
-import { useState, useEffect } from "react";
 
-export default function Leaderboard({ onClick }: { onClick: any }) {
-    const [leaderboardData, setLeaderboardData] = useState([]);
-
-    useEffect(() => {
-        fetch("/api/user/leaderboard").then((res) => res.json()).then((data) => {
-            setLeaderboardData(data[0]);
-        });
-    }, []);
+export default function Leaderboard({ onClick, leaderboard }: { onClick: any, leaderboard: any }) {
     // LeaderboardItem | username, xp, logo
     return (
         <>
@@ -23,11 +15,11 @@ export default function Leaderboard({ onClick }: { onClick: any }) {
                             <h2 className="clash-display font-bold text-6xl text-white/70 mb-6">Top Players</h2>
                             <h2 className="clash-display text-xl text-white/70 mb-6">Top 4 KongsberGuessrs</h2>
                             <div className="flex flex-col sm:flex-row gap-10 w-full justify-center">
-                                {leaderboardData.length == 0 ?
+                                {leaderboard.length == 0 ?
                                     <h1 className="clash-display font-bold text-7xl text-white/70 mx-[127px] my-12">
                                         Loading...
                                     </h1>
-                                    : leaderboardData.map((user: any, index) => (
+                                    : leaderboard.map((user: any, index: any) => (
                                         <LeaderboardItem
                                             username={user.username}
                                             xp={user.xp}

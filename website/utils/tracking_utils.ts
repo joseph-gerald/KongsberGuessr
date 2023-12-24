@@ -58,6 +58,13 @@ function isNotJSON(req: NextApiRequest) {
     return typeof req.body !== 'object' || req.headers['content-type'] != "application/json";
 }
 
+async function getData(token: string) {
+    const session = await Session.findOne({ token: token });
+    const user = await User.findOne({ _id: session.user })
+
+    return { user, session };
+}
+
 async function validateData(req: NextApiRequest, res: NextApiResponse, expectingJson: boolean = true) {
     if (isNotJSON(req) && expectingJson) {
         res.status(400).json({ error: 'Expected a JSON body' })

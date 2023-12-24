@@ -4,17 +4,39 @@ import Select from "./select";
 import Leaderboard from "./leaderboard";
 import game_utils from "../../../utils/game_utils";
 
-export default function Index() {
+export async function getServerSideProps(context: { req: any; }) {
+    const origin = game_utils.origin;
+ 
+    const payload = {
+        method: "POST",
+        headers: context.req.headers,
+    };
+ 
+    const fetchXp = fetch(origin + "/api/user/xp", payload).then((res) => res.text());
+    const fetchStats = fetch(origin + "/api/user/stats", payload).then((res) => res.json());
+    const fetchLeaderboard = fetch(origin + "/api/user/leaderboard", payload).then((res) => res.json());
+ 
+    const [data, stats, leaderboard] = await Promise.all([fetchXp, fetchStats, fetchLeaderboard]);
+ 
+    const { xp, username } = JSON.parse(data);
+    const { personal, global } = stats;
+ 
+    return {
+        props: {
+            xp,
+            username,
+ 
+            personal,
+            global,
+ 
+            leaderboard
+        }
+    };
+ }
+ 
+
+export default function Index({ xp, username, personal, global, leaderboard }: { xp: number, username: string, personal: any, global: any, leaderboard: any }) {
     const [menuToShow, setMenuToShow] = useState("");
-
-    const stat = {
-        score: 0,
-        time: 0,
-        accuracy: 0,
-    }
-
-    const [personal, setPersonal] = useState(stat);
-    const [global, setGlobal] = useState(stat);
 
     const showSelection = () => {
         setMenuToShow("selection");
@@ -23,20 +45,6 @@ export default function Index() {
     const showLeaderboard = () => {
         setMenuToShow("leaderboard");
     };
-
-    const [xp, setXp] = useState(0);
-    const [username, setUsername] = useState(null);
-
-    useEffect(() => {
-        fetch("/api/user/stats").then((res) => res.json()).then((data) => {
-            setPersonal(data.personal);
-            setGlobal(data.global);
-        });
-        fetch("/api/user/xp").then((res) => res.json()).then((data) => {
-            setXp(data.xp);
-            setUsername(data.username);
-        });
-    }, []);
 
     return (
         <>
@@ -47,7 +55,7 @@ export default function Index() {
                     </>
                     : menuToShow === "leaderboard" ?
                         <>
-                            <Leaderboard onClick={() => setMenuToShow("")} />
+                            <Leaderboard leaderboard={leaderboard} onClick={() => setMenuToShow("")} />
                         </>
                         :
                         <>
