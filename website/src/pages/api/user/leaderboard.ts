@@ -9,11 +9,11 @@ export default async function validate(req: NextApiRequest, res: NextApiResponse
     const data = await tracking_utils.validateData(req, res, false);
     if (typeof data == "string") return;
 
-    res.json([
+    res.json(
         await User.aggregate([
             { $sort: { xp: -1 } },
             { $limit: 4 },
             { $project: { _id: 0, username: 1, xp: 1 } }
         ])
-    ])
+    )
 }
