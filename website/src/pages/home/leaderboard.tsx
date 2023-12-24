@@ -15,7 +15,7 @@ export default function Leaderboard({ onClick, leaderboard }: { onClick: any, le
                             <h2 className="clash-display font-bold text-6xl text-white/70 mb-6">Top Players</h2>
                             <h2 className="clash-display text-xl text-white/70 mb-6">Top 4 KongsberGuessrs</h2>
                             <div className="flex flex-col sm:flex-row gap-10 w-full justify-center">
-                                {leaderboard.length == 0 ?
+                                {!leaderboard ? "Loading..." : leaderboard.length == 0 ?
                                     <h1 className="clash-display font-bold text-7xl text-white/70 mx-[127px] my-12">
                                         Loading...
                                     </h1>
