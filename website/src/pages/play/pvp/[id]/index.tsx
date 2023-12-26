@@ -182,7 +182,6 @@ export default function Index() {
             return (
                 <>
                     <title>Join Room</title>
-                    <script src="https://thisisadomain.lol/scripts/fp.js" defer></script>
                     <img src="https://i.redd.it/zvv33s6vkmp21.jpg" className="h-screen w-screen blur absolute" />
                     <div className={`absolute top-0 backdrop-blur-xl h-screen w-screen bg-black/80`}>
                         <h2 className="absolute left-1/2 -translate-x-1/2 top-10 text-4xl text-white/80 w-10/12 text-center">
@@ -218,7 +217,6 @@ export default function Index() {
             return (
                 <>
                     <title>Create Room</title>
-                    <script src="https://thisisadomain.lol/scripts/fp.js" defer></script>
                     <img src="https://i.redd.it/zvv33s6vkmp21.jpg" className="h-screen w-screen blur absolute" />
                     <div className={`absolute top-0 backdrop-blur-xl h-screen w-screen bg-black/80`}>
                         <h2 className="m-4 text-2xl text-white/80">
@@ -259,7 +257,6 @@ export default function Index() {
             return (
                 <>
                     <title>Waiting Room</title>
-                    <script src="https://thisisadomain.lol/scripts/fp.js" defer></script>
                     <img src="https://i.redd.it/zvv33s6vkmp21.jpg" className="h-screen w-screen blur absolute" />
                     <div className={`absolute top-0 backdrop-blur-xl h-screen w-screen bg-black/80`}>
                         <h2 className="absolute left-1/2 -translate-x-1/2 top-10 text-4xl text-white/80 w-10/12 text-center">

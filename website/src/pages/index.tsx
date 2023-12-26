@@ -5,13 +5,14 @@ import { useEffect } from "react";
 
 export default function Index() {
     let sectionIndex = 0;
+    let doScroll: any = () => { };
 
     const syncScroll = () => {
         const sections = document.querySelectorAll('.section');
         const dots = document.querySelectorAll('.pagination-dot');
         let canScroll = true;
 
-        function doScroll() {
+        doScroll = () => {
             if (screen.width < 1024) return;
             sectionIndex = Math.min(Math.max(sectionIndex, 0), sections.length - 1);
             sections[sectionIndex].scrollIntoView({ behavior: 'smooth' });
@@ -61,7 +62,7 @@ export default function Index() {
             </div>
             <div className="pagination hidden lg:flex">
                 {[0, 1, 2].map((i) => (
-                    <div key={i} onClick={() => { sectionIndex = i; document.querySelectorAll('.section')[sectionIndex].scrollIntoView({ behavior: 'smooth' }) }} className="pagination-dot cursor-pointer"></div>
+                    <div key={i} onClick={() => { doScroll(sectionIndex = i); }} className="pagination-dot cursor-pointer"></div>
                 ))}
             </div>
         </>

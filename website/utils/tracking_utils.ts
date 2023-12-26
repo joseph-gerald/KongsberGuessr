@@ -65,23 +65,14 @@ async function getData(token: string) {
     return { user, session };
 }
 
-async function validateData(req: NextApiRequest, res: NextApiResponse, expectingJson: boolean = true) {
-    if (isNotJSON(req) && expectingJson) {
-        res.status(400).json({ error: 'Expected a JSON body' })
-        return "Expected a JSON body";
-    }
-
-    let token = req.cookies.token;
-
+async function validateBody(token: any, useragent: any, ip_address: any) {
     if (!token) {
-        res.status(400).json({ error: 'Missing token' })
         return "Missing Token";
     }
 
     const session = await Session.findOne({ token: token });
 
     if (!session) {
-        res.status(400).json({ error: 'Invalid token' })
         return "Invalid Token";
     }
 
@@ -89,18 +80,36 @@ async function validateData(req: NextApiRequest, res: NextApiResponse, expecting
     const fingerprint = await Fingerprint.findOne({ _id: session.fingerprint })
     const fp_data = JSON.parse(fingerprint.data);
 
-    const useragent = req.headers['user-agent'];
-    const ip_address = req.headers['cf-connecting-ip'] || req.socket.remoteAddress;
 
     const useragent_mismatch = fp_data.USERAGENT != useragent;
     const ip_mismatch = tracking_utils.isMismatchingIP(session.ip_address, ip_address);
 
     if (useragent_mismatch || ip_mismatch) {
-        res.status(401).json({ error: 'Invalid' })
         return "Invalid";
     }
 
-    return { user, token, session, fp_data }
+    return { token, user, session, fp_data };
 }
 
-export default { process, isMismatchingIP, isNotJSON, validateData };
+async function validateData(req: NextApiRequest, res: NextApiResponse, expectingJson: boolean = true) {
+    if (isNotJSON(req) && expectingJson) {
+        res.status(400).json({ error: 'Expected a JSON body' })
+        return "Expected a JSON body";
+    }
+
+    let token = req.cookies.token;
+    
+    const useragent = req.headers['user-agent'];
+    const ip_address = req.headers['cf-connecting-ip'] || req.socket.remoteAddress;
+
+    const validation = await validateBody(token, useragent, ip_address);
+
+    if (typeof validation == "string") {
+        res.status(400).json({ error: validation })
+        return validation;
+    }
+
+    return validation;
+}
+
+export default { process, isMismatchingIP, isNotJSON, validateData, validateBody };

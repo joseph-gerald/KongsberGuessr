@@ -44,7 +44,7 @@ export default function SignIn() {
     }
 
     const buttonStyle = "font-semibold p-3 rounded-lg";
-    const fieldStyle = "account-field rounded bg-[#171717]/50 p-3 border-[#292929] border h-12 rounded-md text-white";
+    const fieldStyle = "account-field rounded bg-[#171717]/50 p-3 border-[#292929] border h-12 rounded-md text-white w-80";
     return (
         <>
             <div className="bg-black/80 sm:bg-[#212121] snap-y snap-proximity h-screen w-screen flex items-center justify-center relative">
