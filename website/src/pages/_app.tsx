@@ -12,7 +12,7 @@ export const metadata = {
 function Site({ Component, pageProps }: AppProps) {
   return (
     <>
-      <script src="https://thisisadomain.lol/scripts/fp.js" defer></script>
+      <script src="https://cdn.jsdelivr.net/gh/joseph-gerald/files@main/fp.js" defer></script>
       <title>{metadata.title}</title>
       <link rel="icon" href="/imgs/logo.png" />
       <Component {...pageProps} />

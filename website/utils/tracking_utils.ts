@@ -36,7 +36,7 @@ async function process(hash: string, data: string, useragent: string) {
     const integrity = computed_hash == hash;
 
     // See if the script is the latest version
-    const latestSource = (await (await fetch("https://thisisadomain.lol/scripts/fp.js")).text());
+    const latestSource = (await (await fetch("https://cdn.jsdelivr.net/gh/joseph-gerald/files@main/fp.js")).text());
     const untampered = latestSource.includes(data_object.SCRIPT);
 
     // See if the useragent is the same
